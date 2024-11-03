@@ -1,0 +1,99 @@
+/* Kiểu cho phần chính của trang */
+.homepage {
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Phần banner hình ảnh nền */
+  .banner {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+  
+  .banner-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .banner-text {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2vw; /* Sử dụng đơn vị vw để padding thích ứng */
+    width: 70%; /* Chiều rộng của khung theo phần trăm */
+    max-width: 1100px; /* Giới hạn chiều rộng tối đa */
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
+  }
+  
+  .banner-text h1 {
+    font-size: 2vw; /* Kích thước chữ tùy thuộc vào chiều rộng màn hình */
+    margin: 0;
+  }
+  
+  .banner-text h2 {
+    font-size: 2vw; /* Kích thước chữ tùy thuộc vào chiều rộng màn hình */
+    margin: 5px 0 0;
+  }
+  
+  
+  /* Phần thông báo chung */
+  .notification-section {
+    padding: 20px;
+    
+  }
+  
+  
+  .notification-section h3 {
+    color: #0073e6;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .notification {
+    display: flex;
+    background-color: #ffff;
+    border: 1px solid #1606068d;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .notification-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    font-size: 40px;
+    color: #000;
+  }
+  
+  .notification-content h4 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .notification-date {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .notification-content .notification-text {
+    margin: 20px 0;
+  }
+  
+  .notification-content a {
+    color: #0073e6;
+    text-decoration: none;
+  }
+  
+  .notification-content a:hover {
+    text-decoration: underline;
+  }
+  

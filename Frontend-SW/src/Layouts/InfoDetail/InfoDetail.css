@@ -1,0 +1,68 @@
+.infodetail {
+  position: absolute;
+  margin-left: auto;
+  background-color: white;
+  border-radius: 10px;
+  border: solid 1px white;
+  margin-top: 60px;
+  margin-right: 10px;
+  padding: 5px 20px 10px 10px;
+  height: fit-content;
+  z-index: 1;
+  line-height: 1.5;
+  color: black; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.infodetail p {
+  text-align: center;
+  font-size: 18px; 
+  font-weight: bold;
+}
+.custom-hr {
+  border: none; 
+  border-bottom: 3px solid rgb(0, 0, 255); 
+  margin: 0 0 15px 0; 
+}
+.infodetail ul {
+  list-style-type: none;
+  padding-left: 20px;
+  text-align: left;
+}
+
+.infodetail li {
+  font-size: 12px;
+  margin: 10px 0;
+}
+.buttons-container {
+  margin-top: 10px;
+  display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.buttons-container button {
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.buy {
+  background-color: #6eb71b;
+  margin-bottom: 2vh;
+  font-weight: bold;
+}
+.buy a {
+  color: white; 
+}
+.exit {
+  background-color: #f33123;
+  font-weight: bold;
+}
+.exit a {
+  color: white;
+ 
+}
+

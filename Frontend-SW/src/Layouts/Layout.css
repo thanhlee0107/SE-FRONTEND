@@ -1,0 +1,86 @@
+.page-wrapper{
+  width: fit-content;
+
+
+  min-width: 99vw;
+
+}
+.header {
+  background-color: #367fa9;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  position: fixed; 
+  top: 0;
+  width: 100%; 
+  z-index: 1000; 
+}
+
+.ant-layout-sider-children {
+  background-color: white;
+
+}
+.layout-sidebar{
+  margin-top: 8vh;
+  width: fit-content;
+  background-color: white;
+}
+
+
+.logobk {
+  background: url("../Components/Assets/logobk.png") no-repeat center;
+  background-size: cover;
+  width: 71px;
+  height: 45px;
+}
+
+.notification-button {
+  background-color: transparent;
+  border: none;
+  margin-right: 5px;
+}
+.right-corner {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  margin-right: 24px;
+}
+
+.info-form {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  border-left: solid 1px #100f0f;
+  padding: 0 5px;
+}
+.info-form .info-list {
+  padding-left: 10px;
+}
+.info-form .info-list li {
+  padding: 0;
+  margin: 0;
+  line-height: 1.5;
+  font-size: 16px;
+  text-align: center;
+}
+
+.user-icon {
+  padding: 14px 15px;
+  background-color: white;
+  color: #367fa9;
+  border-radius: 22px;
+}
+.dropdown {
+  background-color: transparent;
+  border: none;
+  margin-left: 5px;
+}
+
+.layout-sidebar{
+  display: flex;
+  flex-direction: column;
+}

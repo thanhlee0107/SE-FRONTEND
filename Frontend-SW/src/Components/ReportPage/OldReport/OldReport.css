@@ -1,0 +1,42 @@
+.wrap-report{
+    padding: 5px 5px 10px 30px;
+
+}
+
+h2 {
+    border-bottom: 4px solid; /* Thickness of the underline */
+  border-image: linear-gradient(to right, #395e94, #62cde0); /* Gradient colors */
+  border-image-slice: 1;
+}
+.table-list-report{
+    margin: 20px 0;
+    background-color: white;
+    border-collapse: collapse;
+    text-align: center;
+}
+.table-list-report td{
+    border-bottom:  1px solid #337ead;
+
+}
+
+.table-list-report tr td{
+    height: 79px;
+    width: 12vw;
+    justify-content: center ;
+}
+
+
+.print-button{
+    background: linear-gradient(135deg, #54cf70, #37d996);
+    margin: 10px 15px;
+    color: aliceblue;
+}
+.wrap-select{
+    margin-bottom: 30px;
+}
+.choose-month{
+    padding-right: 10px;
+}
+.select{
+    margin-top: 50px;
+}
