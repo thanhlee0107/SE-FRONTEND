@@ -1,46 +1,60 @@
 const authMethod = require("./auth.methods");
+const userModel = require("../user/user.model");
+const { CreateUserDto } = require("../user/user.dtos");
+const bcrypt = require("bcrypt");
+const SALT_ROUNDS = 10;
+
+const validateHCMUTEmail = (email) => {
+  return typeof email === "string" && email.endsWith("@hcmut.edu.vn");
+};
 
 exports.register = async (req, res) => {
-  const username = req.body.username.toLowerCase();
-  const user = await userModel.getUser(username);
+  if (!validateHCMUTEmail(req.body.email)) {
+    return res
+      .status(400)
+      .send("Invalid email address (must be @hcmut.edu.vn)");
+  }
+  const user = await userModel.getUserByEmail(req.body.email);
   if (user) res.status(409).send("Account already exists");
   else {
     const hashPassword = bcrypt.hashSync(req.body.password, SALT_ROUNDS);
-    const newUser = {
-      username: username,
-      password: hashPassword,
-      // Add more fields here
-    };
-    const createUser = await userModel.createUser(newUser);
+    const newUser = new CreateUserDto(req.body);
+    newUser.password = hashPassword;
+    const createUser = await userModel.createUser(newUser, (err, result) => {
+      if (err) {
+        return res.status(400).json({ message: err });
+      }
+      return res.status(201).json({ message: "User created", result });
+    });
     if (!createUser) {
       return res.status(400).send("Failed to create account, please try again");
     }
     return res.send({
-      username,
+      msg: "register success",
+      user: createUser,
     });
   }
 };
 
 exports.login = async (req, res) => {
-  const username = req.body.username.toLowerCase() || "test";
-  const password = req.body.password || "12345";
-
-  //   const user = await userModel.getUser(username);
-  //   if (!user) {
-  //     return res.status(401).send("username not found.");
-  //   }
-
-  //   const isPasswordValid = bcrypt.compareSync(password, user.password);
-  //   if (!isPasswordValid) {
-  //     return res.status(401).send("password is incorrect.");
-  //   }
+  const password = req.body.password;
+  const email = req.body.email;
+  const user = await userModel.getUserByEmail(email);
+  if (!user) {
+    return res.status(401).send("username not found.");
+  }
+  const isPasswordValid = bcrypt.compareSync(password, user.password);
+  if (!isPasswordValid) {
+    return res.status(401).send("password is incorrect.");
+  }
 
   const accessTokenLife = process.env.ACCESS_TOKEN_LIFE;
   const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
   const dataForAccessToken = {
-    // username: user.username,
-    username: username,
+    id: user.id,
+    email: user.email,
+    mssv: user.mssv,
   };
   const accessToken = await authMethod.generateToken(
     dataForAccessToken,
