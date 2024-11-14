@@ -1,11 +1,21 @@
 import { useState } from 'react'
-
-
+import { LandingPage } from './Page/landingPage'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LoginPage } from './Page/login'
+import {HomePage} from './Page/HomePage'
+import {ProtectedRoute} from './protectedRoute'
 function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-neutral-950">
-      <h1 className="text-4xl font-bold text-blue-500">Test tailwind!</h1>
-    </div>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/home" 
+      element={<ProtectedRoute>
+        <HomePage/>
+        </ProtectedRoute>} />
+    </Routes>
+  </BrowserRouter>
   );
 }
 
