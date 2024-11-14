@@ -161,6 +161,20 @@ router.get("/all", userController.getAllUser);
 
 /**
  * @swagger
+ * /user/me:
+ *   get:
+ *     summary: Get my profile
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: My profile
+ *       500:
+ *         description: Server error
+ */
+router.get("/me", userController.getMyProfile);
+
+/**
+ * @swagger
  * /user/{id}:
  *   get:
  *     summary: Get a user by ID

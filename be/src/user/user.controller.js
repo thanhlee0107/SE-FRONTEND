@@ -38,6 +38,11 @@ exports.getUserByMssv = async (req, res) => {
   }
 };
 
+exports.getMyProfile = async (req, res) => {
+  const user = req.user;
+  return res.status(200).json(user);
+};
+
 exports.getUserByEmail = async (req, res) => {
   console.log("getUserByEmail");
   const email = req.params.email;
