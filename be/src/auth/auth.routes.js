@@ -34,7 +34,7 @@ const authController = require("./auth.controller");
  *         name: John Doe
  *         mssv: 1234567
  *         password: password123
- *         email: johndoe@example.com
+ *         email: johndoe@hcmut.edu.vn
  *         pageBalance: 100
  *
  *     LoginUserDto:
@@ -50,7 +50,7 @@ const authController = require("./auth.controller");
  *           type: string
  *           description: The password of the user
  *       example:
- *         email: johndoe@example.com
+ *         email: johndoe@hcmut.edu.vn
  *         password: password123
  */
 
@@ -126,5 +126,59 @@ router.post("/register", authController.register);
  *         description: Server error
  */
 router.post("/login", authController.login);
+
+/**
+ * @swagger
+ * /auth/verify:
+ *   get:
+ *     summary: Verify a token
+ *     tags: 
+ *       - Authentication
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Token is valid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Token is valid"
+ *       401:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "No token provided"
+ *       403:
+ *         description: Invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid token"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
+
+router.get("/verify", authController.verifyToken);
 
 module.exports = router;

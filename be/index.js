@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const db = require("./config/db");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
@@ -8,7 +7,7 @@ const createError = require("http-errors");
 const { isAuth } = require("./src/auth/auth.middlewares");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-
+const db = require("./src/user/dbScripts");
 // Middleware
 // app.use(express.json());
 app.use(bodyParser.json());
@@ -56,9 +55,11 @@ app.use((req, res, next) => {
   next(createError(404));
 });
 //Start
+// Init database form dbScripts
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
+  
   db.connect((err) => {
     if (err) {
       console.log(err);
@@ -66,4 +67,8 @@ app.listen(process.env.PORT, () => {
       console.log("Database connected");
     }
   });
+  //Create a sample test
+  
 });
+
+

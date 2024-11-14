@@ -26,7 +26,7 @@ exports.verifyToken = async (token, secretKey) => {
   try {
     return await verify(token, secretKey);
   } catch (error) {
-    console.log(`Error in verify access token:  + ${error}`);
-    return null;
+    console.log(`Error in token verification: ${error}`);
+    throw error;  // Throw the error so the caller can handle it
   }
 };

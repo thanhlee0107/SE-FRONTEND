@@ -11,6 +11,28 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `;
+const resetAllData = () => {
+  // First, delete all rows in the users table
+  db.query(`DELETE FROM users`, (err, result) => {
+    if (err) {
+      console.log("Error deleting users:", err);
+    } else {
+      console.log("All users deleted");
+
+      // Then, reset the AUTO_INCREMENT
+      db.query(`ALTER TABLE users AUTO_INCREMENT = 1`, (err, result) => {
+        if (err) {
+          console.log("Error resetting auto-increment:", err);
+        } else {
+          console.log("Auto-increment reset to 1");
+        }
+      });
+    }
+  });
+};
+
+// Call the function
+resetAllData();
 
 db.query(createUserTable, (err) => {
   if (err) {
@@ -19,3 +41,5 @@ db.query(createUserTable, (err) => {
     console.log("Table created in script");
   }
 });
+
+module.exports = db;
