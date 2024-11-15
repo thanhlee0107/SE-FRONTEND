@@ -4,6 +4,9 @@ import { loginSuccess } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { addNotificationWithTimeout } from "../features/Notification/toastNotificationSlice";
+
+
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -53,10 +56,24 @@ export const LoginPage = () => {
 
       if (response.ok && data.accessToken) {
         dispatch(loginSuccess(data.accessToken));
+        dispatch(
+          addNotificationWithTimeout({
+            id: Date.now(),
+            message: "Login successful! Welcome back.",
+            type: "success",
+          })
+        );
+
         navigate("/home");
       } 
     } catch (error) {
-      
+      dispatch(
+        addNotificationWithTimeout({
+          id: Date.now(),
+          message: "An error occurred while logging in.",
+          type: "error",
+        })
+      );
       console.error("Login error:", error);
     }
   };
