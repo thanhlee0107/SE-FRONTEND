@@ -56,6 +56,7 @@ exports.login = async (req, res) => {
     email: user.email,
     mssv: user.mssv,
     name: user.name,
+    role: user.role,
   };
   const accessToken = await authMethod.generateToken(
     dataForAccessToken,
@@ -84,21 +85,19 @@ exports.verifyToken = (req, res) => {
     return res.status(401).json({ message: "No token provided" });
   }
 
- 
-  authMethod.verifyToken(token, process.env.ACCESS_TOKEN_SECRET)
+  authMethod
+    .verifyToken(token, process.env.ACCESS_TOKEN_SECRET)
     .then((decoded) => {
       console.log("Token verification successful:", decoded);
-      
+
       return res.status(200).json({
-        message: "Token is valid"
+        message: "Token is valid",
       });
     })
     .catch((err) => {
       if (err.name === "TokenExpiredError") {
-        
         return res.status(401).json({ message: "Token has expired" });
       } else {
-        
         console.error("Token verification failed:", err.message);
         return res.status(403).json({ message: "Invalid token" });
       }
