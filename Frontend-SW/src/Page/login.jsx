@@ -86,7 +86,7 @@ export const LoginPage = () => {
 
 
   return (
-    <div className="bg-[#e2e2e2] flex flex-col items-center w-full">
+    <div className="bg-[#e2e2e2] flex flex-col items-center w-full h-full">
       <div className="bg-slate-50 w-[85%] max-w-[1280px]  relative pt-2">
         {/* Header Section */}
         <div className="flex items-center bg-[#210f7a] p-4 ">
@@ -109,7 +109,7 @@ export const LoginPage = () => {
             </h2>
 
             {/* Error Message */}
-            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {error && <p className="text-red mb-4">{error}</p>}
 
             <form onSubmit={handleLogin} className="space-y-4">
               {/* Username Input */}

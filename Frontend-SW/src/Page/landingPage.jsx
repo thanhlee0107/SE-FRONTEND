@@ -16,7 +16,7 @@ export const LandingPage = () => {
     <img src="/bk_logo.png" alt="BK Logo" className="w-52 h-auto" />
    </div>
 
-        <div className="flex flex-row gap-12" >
+        <div className="flex flex-col  md:flex-row gap-12" >
           
           <Component2
             className="!h-[143.52px] !flex-[0_0_auto]"
