@@ -55,6 +55,7 @@ exports.login = async (req, res) => {
     id: user.id,
     email: user.email,
     mssv: user.mssv,
+    name: user.name,
   };
   const accessToken = await authMethod.generateToken(
     dataForAccessToken,
@@ -68,9 +69,10 @@ exports.login = async (req, res) => {
   }
 
   return res.json({
+    EC: 0,
     msg: "login success",
     accessToken,
-    // user,
+    user,
   });
 };
 

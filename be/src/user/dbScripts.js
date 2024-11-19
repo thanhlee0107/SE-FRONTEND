@@ -32,7 +32,7 @@ const resetAllData = () => {
 };
 
 // Call the function
-resetAllData();
+//resetAllData();
 
 db.query(createUserTable, (err) => {
   if (err) {

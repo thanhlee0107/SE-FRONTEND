@@ -51,7 +51,7 @@ function App() {
             index
             element={
               <PrivateRoute isAuthenticated={isAuthenticated}>
-                {userData?.admin ? <AdHome /> : <Home />}
+                {userData?.role==="admin" ? <AdHome /> : <Home />}
               </PrivateRoute>
             }
           />

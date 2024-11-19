@@ -1,4 +1,7 @@
-CREATE DATABASE dev_db;
+
+---SET UNCKECK HOẶC DROP CONSTRAINT TRƯỚC KHI THÊM DỮ LIỆU, SAU ĐÓ THÊM LẠI
+
+CREATE DATABASE ShoeStore_Management_System;
 USE dev_db;
 CREATE TABLE Student(
 	StudentID	CHAR(7)	NOT NULL,
@@ -96,10 +99,10 @@ CREATE TABLE Printing(
 	CONSTRAINT fk_printing_studentid FOREIGN KEY (StudentID)
 					REFERENCES	Student(StudentID)
 );
-
 CREATE TABLE PrintStatus(
 	Status			VARCHAR(10),
     Date			DATE,
+    EndDate 		DATE,
     Amount			INT,
     IDFile			INT			NOT NULL,
     IDPrinter		INT			NOT NULL,
