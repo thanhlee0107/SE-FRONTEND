@@ -8,6 +8,7 @@ const { isAuth } = require("./src/auth/auth.middlewares");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const db = require("./src/user/dbScripts");
+const printingService = require("./src/printing/printingService");
 // Middleware
 // app.use(express.json());
 app.use(bodyParser.json());
@@ -47,6 +48,7 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", require("./src/auth/auth.routes"));
 app.use("/user", isAuth, require("./src/user/user.routes"));
+app.use("/printing", require("./src/printing/printing.routes"));         //Chỗ này sẽ được update phân quyền sau khi giả lập quy trình in xong
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -59,7 +61,7 @@ app.use((req, res, next) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
-
+  
   db.connect((err) => {
     if (err) {
       console.log(err);
@@ -68,4 +70,10 @@ app.listen(process.env.PORT, () => {
     }
   });
   //Create a sample test
+
+  //start process printing
+  printingService.startPrinters();
+  
 });
+
+
