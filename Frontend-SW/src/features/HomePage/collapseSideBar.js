@@ -10,6 +10,7 @@ const sidebarColapseSlice = createSlice({
   reducers: {
     toggleSidebar(state) {
       state.isCollapsed = !state.isCollapsed;
+      console.log(state.isCollapsed);
     },
   },
 });

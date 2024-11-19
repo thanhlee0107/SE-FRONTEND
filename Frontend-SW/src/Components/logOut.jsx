@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../features/auth/authSlice";
 import { addNotificationWithTimeout } from "../features/Notification/toastNotificationSlice";
 
-const LogOut = () => {
+export const LogOut = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
