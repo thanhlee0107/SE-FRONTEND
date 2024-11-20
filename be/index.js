@@ -59,7 +59,7 @@ app.use((req, res, next) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
-  
+
   db.connect((err) => {
     if (err) {
       console.log(err);
@@ -68,7 +68,4 @@ app.listen(process.env.PORT, () => {
     }
   });
   //Create a sample test
-  
 });
-
-

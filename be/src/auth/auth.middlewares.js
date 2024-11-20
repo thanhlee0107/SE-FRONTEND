@@ -24,9 +24,23 @@ exports.isAuth = async (req, res, next) => {
       );
     }
 
-    console.log("Verified Payload:", verified.payload);
+    // console.log("Verified Payload:", verified.payload);
     const user = await userModel.getUserById(verified.payload.id);
     req.user = user;
+
+    next();
+  } catch (error) {
+    console.error("Authorization error:", error);
+    return handleUnauthorized(res, "An error occurred during authorization");
+  }
+};
+
+exports.isAdmin = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (user.role !== "admin") {
+      return handleUnauthorized(res, "Unauthorized access, admin only");
+    }
 
     next();
   } catch (error) {

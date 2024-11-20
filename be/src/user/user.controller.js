@@ -1,6 +1,15 @@
 const { UpdateUserDto, LoginUser } = require("./user.dtos");
 const User = require("./user.model");
 
+exports.restartUserDatabase = async (req, res) => {
+  try {
+    const result = await User.restartUserDatabase(); // Assuming this is a Promise-based function
+    return res.status(200).json({ message: result });
+  } catch (err) {
+    return res.status(400).json({ message: err.message || err });
+  }
+};
+
 exports.getAllUser = async (req, res) => {
   try {
     const result = await User.getAllUser(); // Assuming this is a Promise-based function

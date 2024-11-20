@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("./auth.controller");
-
+const userController = require("../user/user.controller");
 /**
  * @swagger
  * components:
@@ -132,7 +132,7 @@ router.post("/login", authController.login);
  * /auth/verify:
  *   get:
  *     summary: Verify a token
- *     tags: 
+ *     tags:
  *       - Authentication
  *     security:
  *       - bearerAuth: []
@@ -180,5 +180,19 @@ router.post("/login", authController.login);
  */
 
 router.get("/verify", authController.verifyToken);
+
+/**
+ * @swagger
+ * /auth/restartdb:
+ *   get:
+ *     summary: Restart the database
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Database restarted successfully
+ *       500:
+ *         description: Server error
+ */
+router.get("/restartdb", userController.restartUserDatabase);
 
 module.exports = router;

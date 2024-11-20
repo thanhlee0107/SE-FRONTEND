@@ -1,10 +1,12 @@
 class CreateUserDto {
-  constructor({ name, mssv, password, email, pageBalance }) {
+  constructor({ name, mssv, password, email, sex, pageBalance, role }) {
     this.name = name;
     this.mssv = mssv;
     this.password = password;
     this.email = email;
+    this.sex = sex;
     this.pageBalance = pageBalance;
+    this.role = role;
   }
 }
 
