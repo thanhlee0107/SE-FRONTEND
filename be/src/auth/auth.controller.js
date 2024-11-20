@@ -56,6 +56,7 @@ exports.login = async (req, res) => {
     email: user.email,
     mssv: user.mssv,
     name: user.name,
+    role: user.role,
   };
   const accessToken = await authMethod.generateToken(
     dataForAccessToken,
