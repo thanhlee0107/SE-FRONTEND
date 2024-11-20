@@ -16,8 +16,8 @@ const queryDatabase = (query, params = []) => {
 };
 
 const insertData = [
-  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '1234567', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
-  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '2234567', '1234567', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
+  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
+  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '2234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
 ];
 
 exports.restartUserDatabase = async () => {
