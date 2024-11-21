@@ -7,7 +7,13 @@ import { Footer } from "./Footer";
 import HomeIcon from "/src/assets/home.svg?react";
 import { Link } from "react-router-dom";
 
-export const LayOut = ({ title, breadcrumb, children }) => {
+export const LayOut = ({
+  title = "BKPortal",
+  breadcrumb = "Trang chủ",
+  channel1 = "Ứng Dụng",
+  channel2 = "BKPortal",
+  children,
+}) => {
   const isCollapsed = useSelector((state) => state.sidebarColapse.isCollapsed);
 
   return (
@@ -46,8 +52,8 @@ export const LayOut = ({ title, breadcrumb, children }) => {
           {/* Header*/}
           <div className="flex flex-row items-baseline p-1 border-b bg-[#ecf0f5]">
             {/* Title */}
-            <h1 className="text-xl font-bold m-2">Ứng dụng</h1>
-            <p className="flex-grow text-gray-400 text-sm">BKPortal</p>
+            <h1 className="text-xl font-bold m-2">{channel1}</h1>
+            <p className="flex-grow text-gray-400 text-sm">{channel2}</p>
             <div className="breadcrumbs text-sm font-sans mr-1">
               <ul className="flex items-end">
                 <li className="flex fle items-end">
@@ -83,12 +89,10 @@ LayOut.propTypes = {
   title: PropTypes.string, // title should be a string
   breadcrumb: PropTypes.string, // breadcrumb should be a string
   children: PropTypes.node, // children can be any valid React node
+  channel1: PropTypes.string, // channel1 should be a string
+  channel2: PropTypes.string, // channel2 should be a string
 };
 
-// Default Props
-LayOut.defaultProps = {
-  title: "BKPortal", // Default title
-  breadcrumb: "Trang chủ", // Default breadcrumb
-};
+
 
 export default LayOut;

@@ -18,9 +18,9 @@ const NavigationItem = ({ submenu, link }) => {
         </svg>
       </span>
       {/* Text */}
-      <a className="text-sm text-align-center ">
+      <span className="text-sm text-align-center ">
         {submenu}
-      </a>
+      </span>
     </Link>
   );
 };
