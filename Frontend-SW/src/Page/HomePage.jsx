@@ -7,7 +7,7 @@ import { LayOut } from '../Components/HomePage/LayOut'
 export const HomePage = () => {
     
     return (
-        <div>
+        <div >
         <LayOut/>
         </div>
     )

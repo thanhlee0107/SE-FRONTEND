@@ -1,37 +1,43 @@
 import React, { useState } from "react";
+import NavigationItem  from "./NavigationItem";
+
 
 export const Menu = () => {
   const menus = [
     {
       title: "Sinh viên",
       submenus: [
-        "Thông tin sinh viên",
-        "Thời khóa biểu",
-        "Lịch Thi",
-        "Thông Tin Tuyển Sinh",
+        { name: "Thông tin sinh viên", link: "/student-info" },
+        { name: "Thời khóa biểu", link: "/schedule" },
+        { name: "Lịch Thi", link: "/exam-schedule" },
+        { name: "Thông Tin Tuyển Sinh", link: "/admission-info" },
       ],
     },
     {
       title: "Dịch vụ sinh viên",
       submenus: [
-        "Dịch vụ in ấn",
-        "Đăng ký phúc tra điểm thi",
-        "Đăng ký xét tốt nghiệp",
-        "Đăng ký in thẻ",
-        "Đăng ký kiểm tra tiếng Anh",
-        "Đăng ký hỗ trợ cước 3G",
-        "Đăng ký xác nhận sinh viên",
-        "Đăng ký hoãn thi",
-        "Đăng ký thông tin văn bằng",
-        "Đăng ký rút môn học",
-        "Đăng ký thông tin CC tin học",
+        { name: "Dịch vụ in ấn", link: "/printing-service" },
+        { name: "Đăng ký phúc tra điểm thi", link: "/recheck-scores" },
+        { name: "Đăng ký xét tốt nghiệp", link: "/graduation-request" },
+        { name: "Đăng ký in thẻ", link: "/card-printing" },
+        { name: "Đăng ký kiểm tra tiếng Anh", link: "/english-test" },
+        { name: "Đăng ký hỗ trợ cước 3G", link: "/3g-support" },
+        { name: "Đăng ký xác nhận sinh viên", link: "/student-verification" },
+        { name: "Đăng ký hoãn thi", link: "/exam-delay" },
+        { name: "Đăng ký thông tin văn bằng", link: "/degree-info" },
+        { name: "Đăng ký rút môn học", link: "/withdraw-course" },
+        { name: "Đăng ký thông tin CC tin học", link: "/it-certification-info" },
       ],
     },
     {
       title: "Kết quả học tập",
-      submenus: ["Bảng điểm học kỳ", "Tiến độ học tập"],
+      submenus: [
+        { name: "Bảng điểm học kỳ", link: "/semester-grades" },
+        { name: "Tiến độ học tập", link: "/study-progress" },
+      ],
     },
   ];
+  
   const [openIndexes, setOpenIndexes] = React.useState([]);
   
 
@@ -104,11 +110,11 @@ export const Menu = () => {
                 : "0rem",
             }}
           >
-            <div className="bg-[#2c3b41] flex flex-col">
+            <div className="bg-[#2c3b41] flex flex-col justify-center">
               {menu.submenus.map((submenu, index) => (
                 <div
                   key={index}
-                  className={`transition-opacity p-1 text-[#b8c7ce] hover:text-white duration-700 delay-${
+                  className={`transition-opacity  text-[#b8c7ce] hover:text-white duration-700 delay-${
                     index * 100
                   }ms ${
                     openIndexes.includes(menuIndex)
@@ -119,26 +125,8 @@ export const Menu = () => {
                     height: "2.5rem", 
                   }}
                 >
-                  {/* Icon */}
-                  <span className="ml-2 mr-2 flex items-center">
-                    <svg
-                      className="h-4 w-4"
-                      viewBox="0 0 14 15"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7 14.9651C8.27604 14.9469 9.44271 14.637 10.5 14.0354C11.5573 13.4156 12.4141 12.5588 13.0703 11.4651C13.6901 10.3531 14 9.18644 14 7.96509C14 6.74373 13.6901 5.57707 13.0703 4.46509C12.4141 3.37134 11.5573 2.51457 10.5 1.89478C9.44271 1.29321 8.27604 0.983317 7 0.965088C5.72396 0.983317 4.55729 1.29321 3.5 1.89478C2.44271 2.51457 1.58594 3.37134 0.929688 4.46509C0.309896 5.57707 0 6.74373 0 7.96509C0 9.18644 0.309896 10.3531 0.929688 11.4651C1.58594 12.5588 2.44271 13.4156 3.5 14.0354C4.55729 14.637 5.72396 14.9469 7 14.9651ZM4.8125 7.96509C4.83073 8.7854 5.19531 9.41431 5.90625 9.85181C6.63542 10.2528 7.36458 10.2528 8.09375 9.85181C8.80469 9.41431 9.16927 8.7854 9.1875 7.96509C9.16927 7.14478 8.80469 6.51587 8.09375 6.07837C7.36458 5.67733 6.63542 5.67733 5.90625 6.07837C5.19531 6.51587 4.83073 7.14478 4.8125 7.96509ZM7 11.4651C6.36198 11.4651 5.77865 11.3101 5.25 11.0002C4.72135 10.6903 4.29297 10.262 3.96484 9.71509C3.65495 9.16821 3.5 8.58488 3.5 7.96509C3.5 7.3453 3.65495 6.76196 3.96484 6.21509C4.29297 5.66821 4.72135 5.23983 5.25 4.92993C5.77865 4.62004 6.36198 4.46509 7 4.46509C7.63802 4.46509 8.22135 4.62004 8.75 4.92993C9.27865 5.23983 9.70703 5.66821 10.0352 6.21509C10.3451 6.76196 10.5 7.3453 10.5 7.96509C10.5 8.58488 10.3451 9.16821 10.0352 9.71509C9.70703 10.262 9.27865 10.6903 8.75 11.0002C8.22135 11.3101 7.63802 11.4651 7 11.4651Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                  {/* Text */}
-                  <a
-                    href="#"
-                    className="text-sm text-align-center "
-                  >
-                    {submenu}
-                  </a>
+                  <NavigationItem submenu={submenu.name} link={submenu.link} />
+                
                 </div>
               ))}
             </div>

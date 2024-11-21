@@ -1,42 +1,46 @@
 import React, { useState } from "react";
+import NavigationItem  from "./NavigationItem";
 
 export const CollapsedMenu = () => {
   const menus = [
     {
       title: "Sinh viên",
       submenus: [
-        "Thông tin sinh viên",
-        "Thời khóa biểu",
-        "Lịch Thi",
-        "Thông Tin Tuyển Sinh",
+        { name: "Thông tin sinh viên", link: "/student-info" },
+        { name: "Thời khóa biểu", link: "/schedule" },
+        { name: "Lịch Thi", link: "/exam-schedule" },
+        { name: "Thông Tin Tuyển Sinh", link: "/admission-info" },
       ],
     },
     {
       title: "Dịch vụ sinh viên",
       submenus: [
-        "Dịch vụ in ấn",
-        "Đăng ký phúc tra điểm thi",
-        "Đăng ký xét tốt nghiệp",
-        "Đăng ký in thẻ",
-        "Đăng ký kiểm tra tiếng Anh",
-        "Đăng ký hỗ trợ cước 3G",
-        "Đăng ký xác nhận sinh viên",
-        "Đăng ký hoãn thi",
-        "Đăng ký thông tin văn bằng",
-        "Đăng ký rút môn học",
-        "Đăng ký thông tin CC tin học",
+        { name: "Dịch vụ in ấn", link: "/printing-service" },
+        { name: "Đăng ký phúc tra điểm thi", link: "/recheck-scores" },
+        { name: "Đăng ký xét tốt nghiệp", link: "/graduation-request" },
+        { name: "Đăng ký in thẻ", link: "/card-printing" },
+        { name: "Đăng ký kiểm tra tiếng Anh", link: "/english-test" },
+        { name: "Đăng ký hỗ trợ cước 3G", link: "/3g-support" },
+        { name: "Đăng ký xác nhận sinh viên", link: "/student-verification" },
+        { name: "Đăng ký hoãn thi", link: "/exam-delay" },
+        { name: "Đăng ký thông tin văn bằng", link: "/degree-info" },
+        { name: "Đăng ký rút môn học", link: "/withdraw-course" },
+        { name: "Đăng ký thông tin CC tin học", link: "/it-certification-info" },
       ],
     },
     {
       title: "Kết quả học tập",
-      submenus: ["Bảng điểm học kỳ", "Tiến độ học tập"],
+      submenus: [
+        { name: "Bảng điểm học kỳ", link: "/semester-grades" },
+        { name: "Tiến độ học tập", link: "/study-progress" },
+      ],
     },
   ];
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
-    <div className="bg-outerSpace flex flex-col items-center relative z-10 h-screen">
+    <div className="bg-outerSpace flex flex-col items-center relative z-10 ">
       {menus.map((menu, menuIndex) => (
         <div
           key={menuIndex}
@@ -65,7 +69,7 @@ export const CollapsedMenu = () => {
           </button>
 
           {/* Submenu */}
-          <div
+          {hoveredIndex === menuIndex && (<div
             className={`absolute top-0 left-[5vw] w-56 bg-[#2c3b41] shadow-lg  transition-opacity duration-300 ${
               hoveredIndex === menuIndex ? "opacity-100 visible" : "opacity-0 invisible"
             } z-10`}
@@ -78,12 +82,12 @@ export const CollapsedMenu = () => {
             {menu.submenus.map((submenu, subIndex) => (
               <div
                 key={subIndex}
-                className="px-4 py-2 text-sm text-[#b8c7ce] hover:text-white"
+                className="px-2 py-2 text-sm text-[#b8c7ce] hover:text-white"
               >
-                {submenu}
+               <NavigationItem submenu={submenu.name} link={submenu.link} />
               </div>
             ))}
-          </div>
+          </div>)}
         </div>
       ))}
 
