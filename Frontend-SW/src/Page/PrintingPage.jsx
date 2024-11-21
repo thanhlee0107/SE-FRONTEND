@@ -4,7 +4,7 @@ import { LayOut } from "../Components/LayOut";
 export const PrintingPage = () => {
     return (
         <div>
-        <LayOut>
+        <LayOut title={"Dịch Vụ Sinh viên"} breadcrumb={"Dịch Vụ In Ấn"}>
             <PrintingSection />
         </LayOut>
         </div>

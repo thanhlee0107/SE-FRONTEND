@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-
+import PropTypes from "prop-types";
 import { NavBar } from "./NavBar";
 import { FullSideBar } from "./FullSideBar";
 import { Footer } from "./Footer";
 import HomeIcon from "/src/assets/home.svg?react";
+import { Link } from "react-router-dom";
 
-
-export const LayOut = ({children}) => {
+export const LayOut = ({ title, breadcrumb, children }) => {
   const isCollapsed = useSelector((state) => state.sidebarColapse.isCollapsed);
 
   return (
@@ -20,9 +20,12 @@ export const LayOut = ({children}) => {
             isCollapsed ? "md:w-[5vw]" : "md:w-[20vw]"
           } bg-[#367FA9] items-center justify-center transition-all duration-500`}
         >
+          <Link to={"/home"}>
           <h1 className="text-white text-xl font-bold p-3">
             {isCollapsed ? "Bk" : "myBk/App"}
           </h1>
+          </Link>
+          
         </div>
         {/* NavBar */}
         <NavBar />
@@ -50,11 +53,11 @@ export const LayOut = ({children}) => {
                 <li className="flex fle items-end">
                   <a>
                     <HomeIcon className="h-4 w-4 mr-2" />
-                    BKPortal
+                    {title}
                   </a>
                 </li>
                 <li>
-                  <a className="text-gray-400 mr-2">Trang chủ</a>
+                  <a className="text-gray-400 mr-2">{breadcrumb}</a>
                 </li>
               </ul>
             </div>
@@ -74,3 +77,18 @@ export const LayOut = ({children}) => {
     </div>
   );
 };
+
+// Define PropTypes
+LayOut.propTypes = {
+  title: PropTypes.string, // title should be a string
+  breadcrumb: PropTypes.string, // breadcrumb should be a string
+  children: PropTypes.node, // children can be any valid React node
+};
+
+// Default Props
+LayOut.defaultProps = {
+  title: "BKPortal", // Default title
+  breadcrumb: "Trang chủ", // Default breadcrumb
+};
+
+export default LayOut;
