@@ -1,14 +1,14 @@
-//create fake HomePage 
-import React from 'react'
-import LogOut from '../Components/logOut'
-import { LayOut } from '../Components/HomePage/LayOut'
-
+//create fake HomePage
+import React from "react";
+import { LayOut } from "../Components/LayOut";
+import { HomeDashBoard } from "../Components/HomePage/HomeDashBoard";
 
 export const HomePage = () => {
-    
-    return (
-        <div >
-        <LayOut/>
-        </div>
-    )
-}
+  return (
+    <div>
+      <LayOut>
+        <HomeDashBoard />
+      </LayOut>
+    </div>
+  );
+};

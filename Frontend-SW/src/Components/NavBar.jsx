@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { toggleSidebar } from "@/features/HomePage/collapseSideBar";
 import { jwtDecode } from "jwt-decode";
-import { LogOut } from "../logOut";
+import { LogOut } from "./logOut";
 import MessageIcon from "/src/assets/message-svgrepo-com.svg?react";
 import NotificationIcon from "/src/assets/Notification.svg?react";
 

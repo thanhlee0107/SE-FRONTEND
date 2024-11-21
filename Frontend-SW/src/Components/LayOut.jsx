@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { LogOut } from "../logOut";
+
 import { NavBar } from "./NavBar";
 import { FullSideBar } from "./FullSideBar";
 import { Footer } from "./Footer";
 import HomeIcon from "/src/assets/home.svg?react";
-import { HomeDashBoard } from "./HomeDashBoard";
 
-export const LayOut = () => {
+
+export const LayOut = ({children}) => {
   const isCollapsed = useSelector((state) => state.sidebarColapse.isCollapsed);
 
   return (
@@ -54,7 +54,7 @@ export const LayOut = () => {
                   </a>
                 </li>
                 <li>
-                  <a className="text-gray-400">Trang chủ</a>
+                  <a className="text-gray-400 mr-2">Trang chủ</a>
                 </li>
               </ul>
             </div>
@@ -62,7 +62,7 @@ export const LayOut = () => {
 
           {/* Main */}
           <div className={`flex-grow  `}>
-            {isCollapsed ? <HomeDashBoard /> : <HomeDashBoard />}
+          {children}
           </div>
 
           {/* Footer */}
