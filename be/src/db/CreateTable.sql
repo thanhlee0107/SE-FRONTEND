@@ -1,7 +1,4 @@
-
----SET UNCKECK HOẶC DROP CONSTRAINT TRƯỚC KHI THÊM DỮ LIỆU, SAU ĐÓ THÊM LẠI
-
-CREATE DATABASE ShoeStore_Management_System;
+CREATE DATABASE dev_db;
 USE dev_db;
 CREATE TABLE Student(
 	StudentID	CHAR(7)	NOT NULL,
@@ -112,7 +109,6 @@ CREATE TABLE PrintStatus(
 	CONSTRAINT fk_printstatus_idprinter FOREIGN KEY (IDPrinter)
 					REFERENCES	Printing(IDPrinter)
 );
-
 CREATE TABLE PermittedFile(
 	IDPrinter		INT			NOT NULL,
     PermittedFile	VARCHAR(8),

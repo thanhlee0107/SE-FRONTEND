@@ -144,14 +144,6 @@ function History() {
       </table>
 
       <ul className="pagination">
-        <li>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Trang trước
-          </button>
-        </li>
         {Array.from({ length: totalPages }, (_, index) => (
           <li key={index}>
             <button
@@ -162,14 +154,6 @@ function History() {
             </button>
           </li>
         ))}
-        <li>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            Trang sau
-          </button>
-        </li>
       </ul>
       <div className="pagination-info">
         Trang {currentPage} trên {totalPages}

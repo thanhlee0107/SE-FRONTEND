@@ -15,39 +15,59 @@ const queryDatabase = (query, params = []) => {
   });
 };
 
-// Create the table if it doesn't exist (Should ideally be done separately during migrations)
-const createUserTable = `CREATE TABLE IF NOT EXISTS users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  mssv CHAR(7) NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  pageBalance INT DEFAULT 0,
-  role ENUM('user', 'admin') DEFAULT 'user',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);`;
+const insertData = [
+  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
+  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '2234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
+];
 
-const initializeDatabase = async () => {
-  try {
-    await queryDatabase(createUserTable);
-    console.log("Table created or already exists");
-  } catch (err) {
-    console.log("Error creating table:", err);
-  }
+exports.restartUserDatabase = async () => {
+  db.query(`DELETE FROM users`, (err, result) => {
+    if (err) {
+      console.log("Error deleting users:", err);
+    } else {
+      console.log("All users deleted");
+
+      // Then, reset the AUTO_INCREMENT
+      db.query(`ALTER TABLE users AUTO_INCREMENT = 1`, (err, result) => {
+        if (err) {
+          console.log("Error resetting auto-increment:", err);
+        } else {
+          console.log("Auto-increment reset to 1");
+        }
+      });
+    }
+  });
+
+  insertData.forEach((query) => {
+    db.query(query, (err, result) => {
+      if (err) {
+        console.log("Error inserting users:", err);
+      } else {
+        console.log("User inserted");
+      }
+    });
+  });
+  return {
+    message: [
+      "account: admin@hcmut.edu.vn, password: 1234567",
+      "account: user@hcmut.edu.vn, password: 1234567",
+    ],
+  };
 };
 
 // Function to create a user
 exports.createUser = async (newUser) => {
   try {
-    await initializeDatabase(); // Ensure the table exists before inserting a user
     const result = await queryDatabase(
-      `INSERT INTO users (name, mssv, password, email, pageBalance) VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         newUser.name,
         newUser.mssv,
         newUser.password,
         newUser.email,
+        newUser.sex,
         newUser.pageBalance,
+        newUser.role,
       ]
     );
     return { message: "User created", result };
@@ -122,6 +142,10 @@ exports.updateUserById = async (id, user) => {
   if (user.email) {
     fields.push("email = ?");
     values.push(user.email);
+  }
+  if (user.sex) {
+    fields.push("sex = ?");
+    values.push(user.sex);
   }
   if (user.pageBalance) {
     fields.push("pageBalance = ?");

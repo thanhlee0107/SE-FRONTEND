@@ -11,7 +11,7 @@ const reportService = require('./report.service');
  */
 
 //Cập nhật sau
-//router.get('/', reportService.getAllHistory);
+router.get('/', reportService.getReportByYear);
 
 
 /**
@@ -46,6 +46,6 @@ const reportService = require('./report.service');
  *       500:
  *         description: Lỗi server khi lấy lịch sử in ấn.
  */
-router.get('/month', reportService.getHistoryByMonth);
+router.get('/month', reportService.getReportByMonth);
 
 module.exports = router;

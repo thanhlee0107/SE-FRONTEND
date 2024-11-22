@@ -1,26 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Select, Button } from "antd";
+import { Select, Button, Pagination } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import "./OldReport.css";
-import * as XLSX from 'xlsx';
-//npm install xlsx
+import * as XLSX from "xlsx";
+
 const { Option } = Select;
 
 function OldReport() {
   const [printJobs, setPrintJobs] = useState([]);
   const [fetchStatus, setFetch] = useState(true);
-  const [month, setMonth] = useState(""); // Tháng cần lọc
+  const [month, setMonth] = useState("Tất cả");
   const [year, setYear] = useState("2024");
-  const fetchReports = () => {
+  const [limit] = useState(10);//Số bản ghi/ trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const fetchReports = (page = 1) => {
     const token = localStorage.getItem("access_token");
-    
-    // Lựa chọn URL API dựa trên việc có bộ lọc ngày hay không, mặc đnhj tháng 11
+
     const getApiUrl = () => {
-      let query = `?month=${month || "11"}&year=${year}`;
-      return `http://localhost:8080/report/month${query}`;
+      let query = ``;
+      let query1 = `page=${page}&year=${year}&limit=${limit}`;
+      if (month && month !== "Tất cả") {
+        query += `/month?month=${month}&${query1}`;
+      } else {
+        query += `?${query1}`;
+      }
+      return `http://localhost:8080/report${query}`;
     };
-    // Gọi API với URL phù hợp
+
     fetch(getApiUrl(), {
       method: "GET",
       headers: {
@@ -36,6 +45,7 @@ function OldReport() {
       .then((data) => {
         setFetch(true);
         setPrintJobs(data.history || []);
+        setTotalPages(data.totalPages || 0);
       })
       .catch((error) => {
         setFetch(false);
@@ -43,27 +53,32 @@ function OldReport() {
       });
   };
 
-
   useEffect(() => {
-    fetchReports();
-  }, [month, year]); // Thêm cả `year` để làm phụ thuộc.
+    fetchReports(currentPage);
+  }, [currentPage, month, year]);
 
   const handleMonthChange = (value) => {
     setMonth(value);
+    setCurrentPage(1);
   };
 
   const handleYearChange = (value) => {
     setYear(value);
+    setCurrentPage(1);
   };
 
-  //Hàm xử lí xuất file, sử dụng xlsx
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   const downloadReport = () => {
     if (!printJobs || printJobs.length === 0) {
       alert("Không có dữ liệu để tải xuống");
       return;
     }
 
-    // Chuẩn bị dữ liệu xuất ra file Excel
     const data = printJobs.map((job) => ({
       "Printer ID": job.PrinterID,
       "Cơ sở": job.Campus,
@@ -74,14 +89,9 @@ function OldReport() {
       "Doanh thu": job.Revenue,
     }));
 
-    // Tạo workbook và worksheet
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(data);
-
-    // Đặt tên sheet và thêm vào workbook
     XLSX.utils.book_append_sheet(workbook, worksheet, "Báo cáo");
-
-    // Xuất file Excel
     const fileName = `BaoCao_Thang${month || "TatCa"}_Nam${year}.xlsx`;
     XLSX.writeFile(workbook, fileName);
   };
@@ -110,7 +120,7 @@ function OldReport() {
           value={month}
           onChange={handleMonthChange}
         >
-          <Option value="">Tất cả</Option>
+          <Option value="Tất cả">Tất cả</Option>
           {[...Array(12)].map((_, index) => (
             <Option key={index + 1} value={String(index + 1)}>
               Tháng {index + 1}
@@ -135,40 +145,21 @@ function OldReport() {
       </div>
 
       {fetchStatus && Array.isArray(printJobs) && printJobs.length > 0 ? (
-  month === "" ? (
-    // Khi chọn "Tất cả", nhóm dữ liệu theo tháng
-    Object.entries(
-      printJobs.reduce((acc, job) => {
-        const monthKey = job.Month; // Giả sử dữ liệu API có trường "Month"
-        if (!acc[monthKey]) acc[monthKey] = [];
-        acc[monthKey].push(job);
-        return acc;
-      }, {})
-    ).map(([monthKey, jobs]) => {
-      // Tính tổng cho từng nhóm
-      const totalJobs = jobs.reduce((sum, job) => sum + job.TotalJobs, 0);
-      const totalPages = jobs.reduce((sum, job) => sum + job.TotalA4Pages, 0);
-      const totalRevenue = jobs.reduce((sum, job) => sum + job.Revenue, 0);
-
-      return (
-        <div className="list-report" key={monthKey}>
-          <h2>
-            Tháng {monthKey}, năm {year}
-          </h2>
+        <div className="list-report">
           <table className="table-list-report">
             <thead>
               <tr>
-                <td>PrinterID</td>
-                <td>Cơ sở</td>
-                <td>Tòa nhà</td>
-                <td>Tầng</td>
-                <td>Tổng số trang in</td>
-                <td>Số lượng lượt in</td>
-                <td>Doanh thu</td>
+              <th>PrinterID</th>
+                <th>Cơ sở</th>
+                <th>Tòa nhà</th>
+                <th>Tầng</th>
+                <th>Tổng số trang in</th>
+                <th>Số lượng lượt in</th>
+                <th>Doanh thu</th>
               </tr>
             </thead>
             <tbody>
-              {jobs.map((detail, detailIndex) => (
+              {printJobs.map((detail, detailIndex) => (
                 <tr key={detailIndex}>
                   <td>{detail.PrinterID}</td>
                   <td>{detail.Campus}</td>
@@ -180,70 +171,40 @@ function OldReport() {
                 </tr>
               ))}
               {/* Hàng tổng */}
-              <tr className="total-row">
-                <td colSpan={4} style={{ fontWeight: "bold" }}>Tổng cộng</td>
-                <td>{totalPages}</td>
-                <td>{totalJobs}</td>
-                <td>{totalRevenue}</td>
+              <tr className="summary-row">
+                <td colSpan="4" style={{ textAlign: "right", fontWeight: "bold" }}>
+                  Tổng cộng:
+                </td>
+                <td>
+                  {printJobs.reduce((sum, job) => sum + job.TotalA4Pages, 0)}
+                </td>
+                <td>
+                  {printJobs.reduce((sum, job) => sum + job.TotalJobs, 0)}
+                </td>
+                <td>
+                  {printJobs.reduce((sum, job) => sum + job.Revenue, 0).toLocaleString()} VND
+                </td>
               </tr>
             </tbody>
           </table>
+          <ul className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <li key={index}>
+            <button
+              onClick={() => handlePageChange(index + 1)}
+              className={currentPage === index + 1 ? "active" : ""}
+            >
+              {index + 1}
+            </button>
+          </li>
+        ))}
+      </ul>
         </div>
-      );
-    })
-  ) : (
-    // Khi lọc theo tháng cụ thể
-    <div className="list-report">
-      <h2>
-        Tháng {month}, năm {year}
-      </h2>
-      <table className="table-list-report">
-        <thead>
-          <tr>
-            <td>PrinterID</td>
-            <td>Cơ sở</td>
-            <td>Tòa nhà</td>
-            <td>Tầng</td>
-            <td>Tổng số trang in</td>
-            <td>Số lượng lượt in</td>
-            <td>Doanh thu</td>
-          </tr>
-        </thead>
-        <tbody>
-          {printJobs.map((detail, detailIndex) => (
-            <tr key={detailIndex}>
-              <td>{detail.PrinterID}</td>
-              <td>{detail.Campus}</td>
-              <td>{detail.Building}</td>
-              <td>{detail.Floor}</td>
-              <td>{detail.TotalA4Pages}</td>
-              <td>{detail.TotalJobs}</td>
-              <td>{detail.Revenue}</td>
-            </tr>
-          ))}
-          {/* Hàng tổng */}
-          <tr className="total-row">
-            <td colSpan={4} style={{ fontWeight: "bold" }}>Tổng cộng</td>
-            <td>
-              {printJobs.reduce((sum, job) => sum + job.TotalA4Pages, 0)}
-            </td>
-            <td>
-              {printJobs.reduce((sum, job) => sum + job.TotalJobs, 0)}
-            </td>
-            <td>
-              {printJobs.reduce((sum, job) => sum + job.Revenue, 0)}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  )
-) : (
-  <div className="list-report">
-    <h2>Không có dữ liệu</h2>
-  </div>
-)}
-
+      ) : (
+        <div className="list-report">
+          <h2>Không có dữ liệu</h2>
+        </div>
+      )}
     </div>
   );
 }

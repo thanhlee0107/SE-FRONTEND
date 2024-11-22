@@ -157,6 +157,8 @@ router.post("/update/:id", userController.updateUser);
  *       500:
  *         description: Server error
  */
+//! IF - CHECK ROLE ADMIN
+// router.get("/all", isAdmin, userController.getAllUser);
 router.get("/all", userController.getAllUser);
 
 /**

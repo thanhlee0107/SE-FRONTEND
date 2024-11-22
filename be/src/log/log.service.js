@@ -61,7 +61,6 @@ exports.getHistoryByDate = async (req, res) => {
       message: "Print history retrieved successfully",
       history: rows,
       totalPages,
-      currentPage: page,
     });
   } catch (error) {
     console.error("Error fetching print history by date range:", error);
