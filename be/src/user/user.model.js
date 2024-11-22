@@ -16,19 +16,19 @@ const queryDatabase = (query, params = []) => {
 };
 
 const insertData = [
-  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
-  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '2234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
+  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
+  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '2234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
 ];
 
 exports.restartUserDatabase = async () => {
-  db.query(`DELETE FROM users`, (err, result) => {
+  db.query(`DELETE FROM user`, (err, result) => {
     if (err) {
-      console.log("Error deleting users:", err);
+      console.log("Error deleting user:", err);
     } else {
-      console.log("All users deleted");
+      console.log("All user deleted");
 
       // Then, reset the AUTO_INCREMENT
-      db.query(`ALTER TABLE users AUTO_INCREMENT = 1`, (err, result) => {
+      db.query(`ALTER TABLE user AUTO_INCREMENT = 1`, (err, result) => {
         if (err) {
           console.log("Error resetting auto-increment:", err);
         } else {
@@ -41,7 +41,7 @@ exports.restartUserDatabase = async () => {
   insertData.forEach((query) => {
     db.query(query, (err, result) => {
       if (err) {
-        console.log("Error inserting users:", err);
+        console.log("Error inserting user:", err);
       } else {
         console.log("User inserted");
       }
@@ -59,7 +59,7 @@ exports.restartUserDatabase = async () => {
 exports.createUser = async (newUser) => {
   try {
     const result = await queryDatabase(
-      `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         newUser.name,
         newUser.mssv,
@@ -76,10 +76,10 @@ exports.createUser = async (newUser) => {
   }
 };
 
-// Get all users
+// Get all user
 exports.getAllUser = async () => {
   try {
-    const result = await queryDatabase(`SELECT * FROM users`);
+    const result = await queryDatabase(`SELECT * FROM user`);
     return result;
   } catch (err) {
     throw new Error(err);
@@ -89,9 +89,7 @@ exports.getAllUser = async () => {
 // Get user by ID
 exports.getUserById = async (id) => {
   try {
-    const result = await queryDatabase(`SELECT * FROM users WHERE id = ?`, [
-      id,
-    ]);
+    const result = await queryDatabase(`SELECT * FROM user WHERE id = ?`, [id]);
     return result;
   } catch (err) {
     throw new Error(err);
@@ -101,7 +99,7 @@ exports.getUserById = async (id) => {
 // Get user by MSSV
 exports.getUserByMssv = async (mssv) => {
   try {
-    const result = await queryDatabase(`SELECT * FROM users WHERE mssv = ?`, [
+    const result = await queryDatabase(`SELECT * FROM user WHERE mssv = ?`, [
       mssv,
     ]);
     return result;
@@ -113,7 +111,7 @@ exports.getUserByMssv = async (mssv) => {
 // Get user by email
 exports.getUserByEmail = async (email) => {
   try {
-    const result = await queryDatabase(`SELECT * FROM users WHERE email = ?`, [
+    const result = await queryDatabase(`SELECT * FROM user WHERE email = ?`, [
       email,
     ]);
     return result;
@@ -158,7 +156,7 @@ exports.updateUserById = async (id, user) => {
 
   values.push(id);
 
-  const query = `UPDATE users SET ${fields.join(", ")} WHERE id = ?`;
+  const query = `UPDATE user SET ${fields.join(", ")} WHERE id = ?`;
   try {
     db.query(query, values, (err) => {
       if (err) {
@@ -175,7 +173,7 @@ exports.updateUserById = async (id, user) => {
 // Delete user by ID
 exports.deleteUserById = async (id) => {
   try {
-    const result = await queryDatabase(`DELETE FROM users WHERE id = ?`, [id]);
+    const result = await queryDatabase(`DELETE FROM user WHERE id = ?`, [id]);
     return result;
   } catch (err) {
     throw new Error(err);
