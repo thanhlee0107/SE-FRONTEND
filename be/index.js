@@ -48,6 +48,9 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", require("./src/auth/auth.routes"));
 app.use("/user", isAuth, require("./src/user/user.routes"));
+
+app.use("/printers", require("./src/printer_management/printer.routes"));
+
 app.use("/printing", require("./src/printing/printing.routes"));         //Chỗ này sẽ được update phân quyền sau khi giả lập quy trình in xong
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
