@@ -47,7 +47,7 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", require("./src/auth/auth.routes"));
 app.use("/user", isAuth, require("./src/user/user.routes"));
-
+app.use("/printers", require("./src/printer_management/printer.routes"));
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
