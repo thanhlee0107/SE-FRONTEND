@@ -1,5 +1,5 @@
 const db = require("../../config/db");
-const createUserTable = `CREATE TABLE IF NOT EXISTS users (
+const createUserTable = `CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mssv CHAR(7) UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -12,15 +12,15 @@ const createUserTable = `CREATE TABLE IF NOT EXISTS users (
 );`;
 
 const insertData = [
-  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '1234567', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
-  `INSERT INTO users (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '1234567', '1234567', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
+  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '1234567', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
+  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '1234567', '1234567', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
 ];
 
 const restartUserDatabase = async () => {
   insertData.forEach((query) => {
     db.query(query, (err, result) => {
       if (err) {
-        console.log("Error inserting users:", err);
+        console.log("Error inserting user:", err);
       } else {
         console.log("User inserted");
       }

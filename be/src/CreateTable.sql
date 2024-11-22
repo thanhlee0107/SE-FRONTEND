@@ -1,6 +1,6 @@
 CREATE DATABASE dev_db;
 USE dev_db;
-CREATE TABLE users(
+CREATE TABLE user(
     id INT AUTO_INCREMENT PRIMARY KEY,
     mssv CHAR(7) UNIQUE,
     name VARCHAR(255) NOT NULL,
