@@ -1,7 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const logService = require('./log.service');
-
+const logService = require("./log.service");
 
 /**
  * @swagger
@@ -12,7 +11,7 @@ const logService = require('./log.service');
 
 /**
  * @swagger
- * /log/{studentID}:
+ * /history/{studentID}:
  *   get:
  *     summary: Lấy toàn bộ lịch sử in ấn của một sinh viên
  *     description: Truy xuất lịch sử in ấn của sinh viên theo mã số, hỗ trợ phân trang.
@@ -45,13 +44,11 @@ const logService = require('./log.service');
  *       500:
  *         description: Lỗi server khi truy xuất lịch sử in ấn.
  */
-router.get('/:studentID', logService.getAllHistory);
-
-
+router.get("/:studentID", logService.getAllHistory);
 
 /**
  * @swagger
- * /log/{studentID}/date:
+ * /history/{studentID}/date:
  *   get:
  *     summary: Lấy lịch sử in ấn của sinh viên theo khoảng thời gian
  *     description: Truy xuất lịch sử in ấn của sinh viên theo mã số và khoảng thời gian, hỗ trợ phân trang.
@@ -102,6 +99,6 @@ router.get('/:studentID', logService.getAllHistory);
  *       500:
  *         description: Lỗi server khi truy xuất lịch sử in ấn.
  */
-router.get('/:studentID/date', logService.getHistoryByDate);
+router.get("/:studentID/date", logService.getHistoryByDate);
 
 module.exports = router;

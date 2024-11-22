@@ -11,7 +11,15 @@ CREATE TABLE user(
     role ENUM('user', 'admin') DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE Paper(
+CREATE TABLE IF NOT EXISTS message (
+    id AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES user(id),
+    FOREIGN KEY (receiver_id) REFERENCES user(id),
+) CREATE TABLE Paper(
     Size CHAR(2) NOT NULL DEFAULT 'A4',
     Price INT,
     PRIMARY KEY (Size)
