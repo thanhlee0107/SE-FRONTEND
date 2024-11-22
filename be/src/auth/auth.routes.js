@@ -13,6 +13,7 @@ const userController = require("../user/user.controller");
  *         - mssv
  *         - password
  *         - email
+ *         - sex
  *         - pageBalance
  *       properties:
  *         name:
@@ -32,9 +33,10 @@ const userController = require("../user/user.controller");
  *           description: Page balance available for printing
  *       example:
  *         name: John Doe
- *         mssv: 1234567
+ *         mssv: 1234568
  *         password: password123
  *         email: johndoe@hcmut.edu.vn
+ *         sex: male
  *         pageBalance: 100
  *
  *     LoginUserDto:

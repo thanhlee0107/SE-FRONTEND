@@ -38,15 +38,21 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const password = req.body.password;
+  console.log("login", req.body.email, req.body.password);
+  
   const email = req.body.email;
   const user = await userModel.getUserByEmail(email);
   if (!user) {
     return res.status(401).send("username not found.");
   }
+  
   const isPasswordValid = bcrypt.compareSync(password, user.password);
+  console.log("isPasswordValid", isPasswordValid)
   if (!isPasswordValid) {
     return res.status(401).send("password is incorrect.");
   }
+  
+
 
   const accessTokenLife = process.env.ACCESS_TOKEN_LIFE;
   const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;

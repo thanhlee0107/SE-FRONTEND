@@ -1,5 +1,5 @@
 const db = require("../../config/db");
-const createUserTable = `CREATE TABLE IF NOT EXISTS user (
+const createUserTable = `CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mssv CHAR(7) UNIQUE,
     name VARCHAR(255) NOT NULL,
