@@ -48,3 +48,4 @@ exports.isAdmin = async (req, res, next) => {
     return handleUnauthorized(res, "An error occurred during authorization");
   }
 };
+

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("./auth.controller");
-
+const userController = require("../user/user.controller");
 /**
  * @swagger
  * components:
@@ -13,6 +13,7 @@ const authController = require("./auth.controller");
  *         - mssv
  *         - password
  *         - email
+ *         - sex
  *         - pageBalance
  *       properties:
  *         name:
@@ -32,9 +33,10 @@ const authController = require("./auth.controller");
  *           description: Page balance available for printing
  *       example:
  *         name: John Doe
- *         mssv: 1234567
+ *         mssv: 1234568
  *         password: password123
  *         email: johndoe@hcmut.edu.vn
+ *         sex: male
  *         pageBalance: 100
  *
  *     LoginUserDto:
@@ -132,7 +134,7 @@ router.post("/login", authController.login);
  * /auth/verify:
  *   get:
  *     summary: Verify a token
- *     tags: 
+ *     tags:
  *       - Authentication
  *     security:
  *       - bearerAuth: []
@@ -181,4 +183,19 @@ router.post("/login", authController.login);
 
 router.get("/verify", authController.verifyToken);
 
+/**
+ * @swagger
+ * /auth/restartdb:
+ *   get:
+ *     summary: Restart the database
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Database restarted successfully
+ *       500:
+ *         description: Server error
+ */
+router.get("/restartdb", userController.restartUserDatabase);
+
 module.exports = router;
+
