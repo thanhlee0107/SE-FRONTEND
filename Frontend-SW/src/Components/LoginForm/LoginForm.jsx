@@ -31,7 +31,8 @@ const LoginForm = ({ setIsAuthenticated, setUserData }) => {
     // debugger;
     if (res && res.EC === 0) {
       //depend on backend return res => will be set again
-      localStorage.setItem("access_token", res?.access_token);
+      localStorage.setItem("access_token", res?.accessToken);
+      localStorage.setItem("student_ID", res.user.mssv);
       notification.success({
         message: "Login SUCCESS",
         description: "Success",

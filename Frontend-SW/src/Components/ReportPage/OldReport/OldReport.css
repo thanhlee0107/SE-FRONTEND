@@ -37,6 +37,23 @@ h2 {
 .choose-month{
     padding-right: 10px;
 }
+.choose-year{
+    padding-right: 10px;
+}
 .select{
     margin-top: 50px;
 }
+.total-row {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+  .summary-row {
+    font-weight: bold;
+  }
+  .summary-row td {
+    border-top: 2px solid #000; /* Đường viền trên hàng tổng */
+  }
+  .table-list-report thead th {
+    border-bottom: 2px solid #000; /* Đường viền đen dưới hàng tiêu đề */
+    padding: 8px;
+  }

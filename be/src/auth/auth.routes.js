@@ -198,3 +198,4 @@ router.get("/verify", authController.verifyToken);
 router.get("/restartdb", userController.restartUserDatabase);
 
 module.exports = router;
+

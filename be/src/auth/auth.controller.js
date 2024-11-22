@@ -76,9 +76,10 @@ exports.login = async (req, res) => {
   }
 
   return res.json({
+    EC: 0,
     msg: "login success",
     accessToken,
-    // user,
+    user,
   });
 };
 
