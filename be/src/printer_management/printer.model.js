@@ -142,3 +142,66 @@ exports.deletePrinterById = async (id) => {
         throw new Error(err);
     }
 };
+
+exports.getDefaultPages = async () => {
+    try {
+        const result = await queryDatabase(`SELECT value FROM Config WHERE settingName = 'default_pages_per_student'`);
+        return parseInt(result[0]?.value || 0, 10); // Default to 0 if not set
+    } catch (err) {
+        throw new Error(err);
+    }
+};   
+
+exports.setDefaultPages = async (value) => {
+    try {
+        const result = await queryDatabase(`UPDATE Config SET value = ? WHERE settingName = 'default_pages_per_student'`, [value]);
+        return result;
+    } catch (err) {
+        throw new Error(err);
+    }
+};
+
+exports.resetDefaultPageBalance = async (date) => {
+    try {
+        const result = await queryDatabase(`UPDATE Printer SET pageBalance = 0 WHERE lastResetDate < ?`, [date]);
+        return result;
+    } catch (err) {
+        throw new Error(err);
+    }
+};
+exports.getPermittedFileTypes = async () => {
+    try {
+        const result = await queryDatabase(`SELECT * FROM PermittedFile`);
+        return result;
+    } catch (err) {
+        throw new Error(err);
+    }
+};
+
+exports.setPermittedFileTypes = async (value) => {
+    try {
+        if (!Array.isArray(value)) {
+            value = [value];
+        }
+        const insertPromises = value.map(async (fileType) => {
+            const existingFileType = await queryDatabase(`SELECT * FROM PermittedFile WHERE filetype = ?`, [fileType]);
+            if (existingFileType.length === 0) {
+                return queryDatabase(`INSERT INTO PermittedFile (filetype) VALUES (?)`, [fileType]);
+            }
+        });
+
+        const results = await Promise.all(insertPromises);
+        return results;
+    } catch (err) {
+        throw new Error(err);
+    }
+};
+
+exports.unsetPermittedFileTypes = async (value) => {
+    try {
+        const result = await queryDatabase(`DELETE FROM PermittedFile WHERE value = ?`, [value]);
+        return result;
+    } catch (err) {
+        throw new Error(err);
+    }
+};
