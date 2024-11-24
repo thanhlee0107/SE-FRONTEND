@@ -68,7 +68,7 @@ app.use(
   require("./src/printer_management/printer.routes")
 );
 
-app.use("/printing", isAuth, require("./src/printing/printing.routes")); //Chỗ này sẽ được update phân quyền sau khi giả lập quy trình in xong
+app.use("/printing", isAuth, require("./src/printing/printing.routes"));
 app.use("/messages", isAuth, require("./src/message/message.routes"));
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
