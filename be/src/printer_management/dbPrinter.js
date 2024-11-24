@@ -14,6 +14,34 @@ const createPrinterTable = `CREATE TABLE IF NOT EXISTS Printer(
 );
 `;
 
+const createConfigTable = `CREATE TABLE IF NOT EXISTS Config (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    settingName VARCHAR(50),
+    value VARCHAR(100),
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);`;
+
+const createPermittedFileTable = `CREATE TABLE IF NOT EXISTS PermittedFile (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    filetype VARCHAR(255) UNIQUE
+);`;
+
+db.query(createConfigTable, (err) => {
+    if (err) {
+        console.log("Error creating Config table:", err);
+    } else {
+        console.log("Config table created successfully");
+    }
+});
+
+db.query(createPermittedFileTable, (err) => {
+    if (err) {
+        console.log("Error creating File table:", err);
+    } else {    
+        console.log("File type table created successfully");
+    }
+});
+
 const insertPrinterData = [
   `INSERT INTO Printer (spsoId, Model, Brand, Status, Campus, Building, Floor, Description) VALUES 
     (1, 'Printer 1', 'HP', 'online', 'CS1', 'B1', 4, 'Printer for 4th floor'),
