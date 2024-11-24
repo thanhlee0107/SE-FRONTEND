@@ -1,21 +1,23 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const printingController = require("./printing.controller")
+const printingController = require("./printing.controller");
+
+/**
+ * @swagger
+ * tags:
+ *   name: Request Print
+ *   description: API for managing report
+ */
 
 /**
  * @swagger
  * /printing/printrequest/{id}:
- *  post:
- *  summary: tạo yêu cầu in mới
- *  description: API này được sử dụng để tạo yêu cầu in dựa trên ID của người dùng
- *  parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID của yêu cầu in
- *         schema:
- *           type: string
- *  requestBody:
+ *   post:
+ *     summary: Create a new print request
+ *     description: API to create a print request based on user ID
+ *     tags:
+ *       - Request Print
+ *     requestBody:
  *       required: true
  *       content:
  *         application/json:
@@ -24,26 +26,32 @@ const printingController = require("./printing.controller")
  *             properties:
  *               IDPrinter:
  *                 type: string
- *                 description: ID của máy in
+ *                 description: ID of the printer
  *               IDFile:
  *                 type: string
- *                 description: ID của file cần in
+ *                 description: ID of the file to be printed
  *               Amount:
  *                 type: integer
- *                 description: Số lượng bản in
+ *                 description: Number of copies to print
  *               Size:
  *                 type: string
- *                 description: Kích thước của bản in (ví dụ: A4, A3)
+ *                 description: Paper size (e.g., A4, A3)
  *               Color:
  *                 type: boolean
- *                 description: True nếu in màu, false nếu in đen trắng
+ *                 description: True for color printing, false for black and white
  *             example:
  *               IDPrinter: "1"
  *               IDFile: "3"
  *               Amount: 10
  *               Size: "A3"
  *               Color: true
+ *     responses:
+ *       200:
+ *         description: Print request created successfully
+ *       400:
+ *         description: Invalid input
  */
+
 router.post("/printrequest/:id", printingController.printrequest);
 
 module.exports = router;

@@ -1,7 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const logService = require('./log.service');
-
+const logService = require("./log.service");
 
 /**
  * @swagger
@@ -191,9 +190,8 @@ router.get('/user/date/:studentID', logService.getUserHistoryByDate);
  *       500:
  *         description: Lỗi server.
  */
+
 router.get('/user/:studentID', logService.getUserHistory);
-
-
 
 
 /**
@@ -300,6 +298,7 @@ router.get('/user/:studentID', logService.getUserHistory);
  *         description: Lỗi server khi truy xuất lịch sử in ấn.
  */
 
+
 router.get('/printer/date/:printerID', logService.getPrinterHistoryByDate);
 
 
@@ -391,3 +390,4 @@ router.get('/printer/date/:printerID', logService.getPrinterHistoryByDate);
  */
 router.get('/printer/:printerID', logService.getPrinterHistory);
 module.exports = router;
+

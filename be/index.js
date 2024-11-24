@@ -8,8 +8,8 @@ const { isAuth } = require("./src/auth/auth.middlewares");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const db = require("./src/user/dbScripts");
-const log= require("./src/log/log.routes");
-const report= require("./src/report/report.routes");
+const log = require("./src/log/log.routes");
+const report = require("./src/report/report.routes");
 const printingService = require("./src/printing/printingService");
 
 // Middleware
@@ -42,7 +42,14 @@ const swaggerOptions = {
     ],
   },
 
-  apis: ["src/user/user.routes.js", "src/auth/auth.routes.js", "src/report/report.routes.js","src/log/log.routes.js"], // Đường dẫn đến file chứa chú thích Swagger cho API
+  apis: [
+    "src/user/user.routes.js",
+    "src/auth/auth.routes.js",
+    "src/report/report.routes.js",
+    "src/log/log.routes.js",
+    "src/printing/printing.routes.js",
+    "src/message/message.routes.js",
+  ], // Đường dẫn đến file chứa chú thích Swagger cho API
 };
 
 // Routes
@@ -51,12 +58,17 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", require("./src/auth/auth.routes"));
 app.use("/user", isAuth, require("./src/user/user.routes"));
-app.use('/history', isAuth, log);
-app.use('/report', isAuth, report)
+app.use("/history", isAuth, log);
+app.use("/report", isAuth, report);
 
-app.use("/printers", require("./src/printer_management/printer.routes"));
+app.use(
+  "/printers",
+  isAuth,
+  require("./src/printer_management/printer.routes")
+);
 
-app.use("/printing", require("./src/printing/printing.routes"));         //Chỗ này sẽ được update phân quyền sau khi giả lập quy trình in xong
+app.use("/printing", isAuth, require("./src/printing/printing.routes")); //Chỗ này sẽ được update phân quyền sau khi giả lập quy trình in xong
+app.use("/messages", isAuth, require("./src/message/message.routes"));
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -68,7 +80,7 @@ app.use((req, res, next) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
-  
+
   db.connect((err) => {
     if (err) {
       console.log(err);
@@ -80,5 +92,6 @@ app.listen(process.env.PORT, () => {
 
   //start process printing
   printingService.startPrinters();
-  
+
 });
+
