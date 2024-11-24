@@ -9,11 +9,9 @@ const logService = require("./log.service");
  *   description: API for managing report
  */
 
-
-
 /**
  * @swagger
- * /user/date/{studentID}:
+ * /history/date/{studentID}:
  *   get:
  *     summary: Lấy lịch sử in ấn của sinh viên theo khoảng thời gian
  *     description: Truy xuất lịch sử in ấn của một sinh viên hoặc tất cả sinh viên theo mã số và khoảng thời gian. Hỗ trợ phân trang.
@@ -108,11 +106,11 @@ const logService = require("./log.service");
  *       500:
  *         description: Lỗi server.
  */
-router.get('/user/date/:studentID', logService.getUserHistoryByDate);
+router.get("/date/:studentID", logService.getUserHistoryByDate);
 
 /**
  * @swagger
- * /user/{studentID}:
+ * /history/{studentID}:
  *   get:
  *     summary: Lấy lịch sử in ấn của sinh viên
  *     description: Truy xuất lịch sử in ấn của một sinh viên hoặc tất cả sinh viên dựa trên mã số. Hỗ trợ phân trang.
@@ -191,12 +189,11 @@ router.get('/user/date/:studentID', logService.getUserHistoryByDate);
  *         description: Lỗi server.
  */
 
-router.get('/user/:studentID', logService.getUserHistory);
-
+router.get("/:studentID", logService.getUserHistory);
 
 /**
  * @swagger
- * /printer/date/{printerID}:
+ * /history/printer/date/{printerID}:
  *   get:
  *     summary: Lấy lịch sử in ấn của máy in theo khoảng thời gian
  *     description: Truy xuất lịch sử in ấn của một máy in theo khoảng thời gian. Nếu `printerID` bằng `0`, lịch sử in ấn của tất cả máy in sẽ được lấy. Hỗ trợ phân trang.
@@ -253,7 +250,7 @@ router.get('/user/:studentID', logService.getUserHistory);
  *                   items:
  *                     type: object
  *                     properties:
-  *                      studentID:
+ *                      studentID:
  *                          example: 2020123
  *                      printerID:
  *                           example: PRT12345
@@ -298,14 +295,11 @@ router.get('/user/:studentID', logService.getUserHistory);
  *         description: Lỗi server khi truy xuất lịch sử in ấn.
  */
 
-
-router.get('/printer/date/:printerID', logService.getPrinterHistoryByDate);
-
-
+router.get("/printer/date/:printerID", logService.getPrinterHistoryByDate);
 
 /**
  * @swagger
- * /printer/{printerID}:
+ * /history/printer/{printerID}:
  *   get:
  *     summary: Lấy lịch sử in ấn của máy in
  *     description: Truy xuất lịch sử in ấn của một máy in theo mã số. Nếu `printerID` bằng `0`, lịch sử in ấn của tất cả máy in sẽ được lấy. Hỗ trợ phân trang.
@@ -346,7 +340,7 @@ router.get('/printer/date/:printerID', logService.getPrinterHistoryByDate);
  *                   items:
  *                     type: object
  *                     properties:
-  *                      studentID:
+ *                      studentID:
  *                          example: 2020123
  *                      printerID:
  *                           example: PRT12345
@@ -388,6 +382,5 @@ router.get('/printer/date/:printerID', logService.getPrinterHistoryByDate);
  *       500:
  *         description: Lỗi server khi truy xuất lịch sử in ấn.
  */
-router.get('/printer/:printerID', logService.getPrinterHistory);
+router.get("/printer/:printerID", logService.getPrinterHistory);
 module.exports = router;
-

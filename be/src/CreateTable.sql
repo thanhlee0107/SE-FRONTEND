@@ -1,4 +1,3 @@
-
 CREATE DATABASE dev_db;
 USE dev_db;
 CREATE TABLE user(
@@ -82,14 +81,14 @@ CREATE TABLE Printing(
     CONSTRAINT fk_printing_studentid FOREIGN KEY (StudentID) REFERENCES user(mssv)
 );
 CREATE TABLE PrintStatus(
-    Status VARCHAR(10),
-    Date DATE,
-    Amount INT,
     IDFile INT NOT NULL,
     IDPrinter INT NOT NULL,
-    PRIMARY KEY (Status, Date, Amount, IDFile, IDPrinter),
-    CONSTRAINT fk_printstatus_idfile FOREIGN KEY (IDFile) REFERENCES Printing(IDPrinter),
-    CONSTRAINT fk_printstatus_idprinter FOREIGN KEY (IDPrinter) REFERENCES Printing(IDPrinter)
+    Amount INT NOT NULL,
+    Date DATETIME NOT NULL,
+    Status VARCHAR(255) NOT NULL,
+    EndDate DATETIME,
+    PRIMARY KEY (IDFile, IDPrinter, Amount, Date, Status),
+    FOREIGN KEY (IDFile, IDPrinter) REFERENCES Printing(IDFile, IDPrinter)
 );
 CREATE TABLE PermittedFile(
     IDPrinter INT NOT NULL,
