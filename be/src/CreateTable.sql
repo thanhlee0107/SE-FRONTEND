@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS message (
     message TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES user(id),
-    FOREIGN KEY (receiver_id) REFERENCES user(id),
+    FOREIGN KEY (receiver_id) REFERENCES user(id)
 ) CREATE TABLE Paper(
     Size CHAR(2) NOT NULL DEFAULT 'A4',
     Price INT,

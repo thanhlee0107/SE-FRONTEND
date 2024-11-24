@@ -1,5 +1,6 @@
 const dbPrinting = require("./dbPrinting");
 const modulePrinter = require("../printer_management/printer.model");
+const dbFile = require("../file/dbFile");
 // Lưu trữ hàng đợi công việc cho từng máy in
 const printerQueues = {};
 
@@ -48,9 +49,11 @@ exports.startPrinters = async () => {
 };
 
 // Hàm thêm công việc in vào hàng đợi của một máy in
-const addPrinterJob = async (IDUser, req) => {
+const addPrinterJob = async (IDUser, IDFile, req) => {
   try {
-    const { IDPrinter, IDFile, Amount, Size, Color } = req;
+    const { IDPrinter, Amount, Size, Color } = req;
+
+
     const printDate = new Date();
     task = {
       IDUser: IDUser,
@@ -84,18 +87,22 @@ const addPrinterJob = async (IDUser, req) => {
 
 exports.handlePrintingRequest = async (IDUser, req) => {
   try {
-    const { IDPrinter, IDFile, Amount, Size, Color } = req;
-    if (!IDPrinter || !IDFile || !Amount || !Size || !Color) {
+    const { IDPrinter, Name, Type, Amount, Size, Color } = req;
+
+    // Kiểm tra thông tin đầu vào
+    if (!IDPrinter || !Name || !Type || !Amount || !Size || !Color) {
       console.error("Thiếu thông tin, không thể thêm công việc vào hàng đợi.");
       return;
     }
     //Chỗ này sẽ bổ sung sau các hàm check điều kiện xem coi tài khoản của người dùng có đủ giấy có size và số lượng theo yêu cầu hay không;
     const isValid = true;
     //---------------------------------------------------------------------------------------------
+
     if (isValid) {
-      //update thông tin vào database
-      await dbPrinting.checkAndInsertPrinting(IDFile, IDPrinter, IDUser);
-      await addPrinterJob(IDUser, req);
+        IDFile = await dbFile.checkAndInsertFile(Name, Type, Size, Color);
+        //update thông tin vào database
+        await dbPrinting.checkAndInsertPrinting(IDFile, IDPrinter, IDUser);
+        await addPrinterJob(IDUser, IDFile, req);
     } else {
       throw new Error("Điều kiện không đủ để in yêu cầu này");
     }
