@@ -92,4 +92,6 @@ app.listen(process.env.PORT, () => {
 
   //start process printing
   printingService.startPrinters();
+
 });
+
