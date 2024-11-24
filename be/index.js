@@ -49,6 +49,7 @@ const swaggerOptions = {
     "src/log/log.routes.js",
     "src/printing/printing.routes.js",
     "src/message/message.routes.js",
+    "src/printer_management/printer.routes.js",
   ], // Đường dẫn đến file chứa chú thích Swagger cho API
 };
 
@@ -92,6 +93,4 @@ app.listen(process.env.PORT, () => {
 
   //start process printing
   printingService.startPrinters();
-
 });
-
