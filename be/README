@@ -1,50 +1,64 @@
-# SE-FRONTEND Backend
+SE-FRONTEND Backend
+This repository contains the backend code for the SE-FRONTEND project, providing APIs and database management functionalities.
 
-This repository contains the backend code for the SE-FRONTEND project.
+Table of Contents
+Introduction
+Features
+Installation
+Usage
+Contributing
+License
+Introduction
+The SE-FRONTEND Backend is a RESTful API designed to support the SE-FRONTEND project. It includes functionality for database initialization, API documentation through Swagger, and a testing environment for development.
 
-## Table of Contents
+Features
+RESTful API for seamless integration.
+Swagger documentation available at /api-docs.
+Easy setup for database initialization.
+Support for running unit and integration tests.
+Installation
+Follow the steps below to set up the backend:
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Introduction
-
-Provide a brief introduction to your project here.
-
-## Installation
-
-\`\`\`sh
+bash
+Copy code
+# Navigate to the backend directory
 cd be
 
-Connect to database Mysql -> env
+# Configure environment variables for MySQL connection in the .env file
+# Example:
+# DB_HOST=localhost
+# DB_PORT=3306
+# DB_USER=root
+# DB_PASSWORD=yourpassword
+# DB_NAME=yourdatabase
 
-Run: npm i
+# Install dependencies
+npm install
 
-run: node initDatabase.js
-\`\`\`
+# Initialize the database
+node initDatabase.js
+Usage
+Start the development server and access project features:
 
-## Usage
-
-\`\`\`sh
-
+bash
+Copy code
 # Start the development server
-
 nodemon index.js
 
+# API Documentation
+# Swagger UI is available at:
+http://localhost:3003/api-docs
+
 # Run tests
-
 npm test
-\`\`\`
+Contributing
+We welcome contributions to the SE-FRONTEND Backend. To contribute:
 
-How to use the project after installation.
+Fork the repository.
+Create a new branch for your feature or bug fix.
+Commit your changes with clear and descriptive messages.
+Submit a pull request for review.
+License
+This project is licensed under the MIT License.
 
-## Contributing
-
-Guidelines for contributing to the project.
-
-## License
-
-Include the license information for the project.
+Feel free to replace placeholder text (e.g., license details or example .env variables) with the specific details for your project.
