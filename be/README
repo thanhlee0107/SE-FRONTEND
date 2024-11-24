@@ -1,0 +1,50 @@
+# SE-FRONTEND Backend
+
+This repository contains the backend code for the SE-FRONTEND project.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Introduction
+
+Provide a brief introduction to your project here.
+
+## Installation
+
+\`\`\`sh
+cd be
+
+Connect to database Mysql -> env
+
+Run: npm i
+
+run: node initDatabase.js
+\`\`\`
+
+## Usage
+
+\`\`\`sh
+
+# Start the development server
+
+nodemon index.js
+
+# Run tests
+
+npm test
+\`\`\`
+
+How to use the project after installation.
+
+## Contributing
+
+Guidelines for contributing to the project.
+
+## License
+
+Include the license information for the project.

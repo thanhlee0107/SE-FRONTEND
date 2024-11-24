@@ -2,13 +2,13 @@ const db = require("../../config/db");
 
 const scripts = `
     CREATE TABLE IF NOT EXISTS message (
-        id AUTO_INCREMENT PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         sender_id INT NOT NULL,
         receiver_id INT NOT NULL,
         message TEXT NOT NULL,
         sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (sender_id) REFERENCES user(id),
-        FOREIGN KEY (receiver_id) REFERENCES user(id),
+        FOREIGN KEY (receiver_id) REFERENCES user(id)
     )
 `;
 
@@ -21,3 +21,5 @@ const createMessageTable = () => {
     }
   });
 };
+createMessageTable();
+module.exports = db;

@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require("../../config/db");
 
 //Lớp Persistence Layer, tuơng tự Model
 //Hàm hỗ trợ query database
@@ -74,33 +74,32 @@ exports.getReportByYear = async (year, offset, limit) => {
       throw new Error("No results found for the selected year");
     }
 
-    return { rows, totalPages};
+    return { rows, totalPages };
   } catch (error) {
     console.error("Error executing query:", error);
     throw new Error("Error fetching print report by year");
   }
 };
 
-  
-  // Lấy bao cao in ấn theo thang
-  exports.getReportByMonth = async (month, year, offset, limit) => {
-    try {
-      const totalRows = await queryDatabase(
-        `
+// Lấy bao cao in ấn theo thang
+exports.getReportByMonth = async (month, year, offset, limit) => {
+  try {
+    const totalRows = await queryDatabase(
+      `
         SELECT COUNT(DISTINCT p.IDPrinter) AS total 
         FROM Printing p
         JOIN File f ON p.IDFile = f.ID
         JOIN PrintStatus ps ON p.IDPrinter = ps.IDPrinter AND p.IDFile = ps.IDFile
         WHERE MONTH(ps.EndDate) = ? AND YEAR(ps.EndDate) = ?;
         `,
-        [month, year]
-      );
-  
-      const totalRecords = totalRows[0].total;
-      const totalPages = Math.ceil(totalRecords / limit);
-  
-      const rows = await queryDatabase(
-        `
+      [month, year]
+    );
+
+    const totalRecords = totalRows[0].total;
+    const totalPages = Math.ceil(totalRecords / limit);
+
+    const rows = await queryDatabase(
+      `
         SELECT 
           p.IDPrinter AS PrinterID,
           pr.Campus,
@@ -132,17 +131,16 @@ exports.getReportByYear = async (year, offset, limit) => {
         ORDER BY p.IDPrinter ASC
         LIMIT ? OFFSET ?;
         `,
-        [month, year, limit, offset]
-      );
-  
-      if (!rows || rows.length === 0) {
-        throw new Error("No results found for the selected month and year");
-      }
-  
-      return { rows, totalPages};
-    } catch (error) {
-      console.error("Error executing query:", error);
-      throw new Error("Error fetching print report by month");
+      [month, year, limit, offset]
+    );
+
+    if (!rows || rows.length === 0) {
+      throw new Error("No results found for the selected month and year");
     }
-  };
-  
+
+    return { rows, totalPages };
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw new Error("Error fetching print report by month");
+  }
+};

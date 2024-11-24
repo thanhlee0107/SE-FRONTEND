@@ -31,7 +31,7 @@ const restartUserDatabase = async () => {
 };
 
 // Call the function
-// restartUserDatabase();
+restartUserDatabase();
 
 db.query(createUserTable, (err) => {
   if (err) {

@@ -53,7 +53,6 @@ const addPrinterJob = async (IDUser, IDFile, req) => {
   try {
     const { IDPrinter, Amount, Size, Color } = req;
 
-
     const printDate = new Date();
     task = {
       IDUser: IDUser,
@@ -88,7 +87,6 @@ const addPrinterJob = async (IDUser, IDFile, req) => {
 exports.handlePrintingRequest = async (IDUser, req) => {
   try {
     const { IDPrinter, Name, Type, Amount, Size, Color } = req;
-
     // Kiểm tra thông tin đầu vào
     if (!IDPrinter || !Name || !Type || !Amount || !Size || !Color) {
       console.error("Thiếu thông tin, không thể thêm công việc vào hàng đợi.");
@@ -99,10 +97,10 @@ exports.handlePrintingRequest = async (IDUser, req) => {
     //---------------------------------------------------------------------------------------------
 
     if (isValid) {
-        IDFile = await dbFile.checkAndInsertFile(Name, Type, Size, Color);
-        //update thông tin vào database
-        await dbPrinting.checkAndInsertPrinting(IDFile, IDPrinter, IDUser);
-        await addPrinterJob(IDUser, IDFile, req);
+      IDFile = await dbFile.checkAndInsertFile(Name, Type, Size, Color);
+      //update thông tin vào database
+      await dbPrinting.checkAndInsertPrinting(IDFile, IDPrinter, IDUser);
+      await addPrinterJob(IDUser, IDFile, req);
     } else {
       throw new Error("Điều kiện không đủ để in yêu cầu này");
     }
