@@ -7,6 +7,9 @@ import { CollapsedMenu } from "./CollapseMenu";
 export const FullSideBar = () => {
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const isCollapsed = useSelector((state) => state.sidebarColapse.isCollapsed);
+  const role=useSelector((state)=>state.auth.role);
+  console.log(role);
+
   const token = localStorage.getItem("jwt");
 
   const decodedToken = token ? jwtDecode(token) : null;
@@ -40,7 +43,7 @@ export const FullSideBar = () => {
                   <span className="h-2 w-2 bg-[#3C763D] rounded-full inline-block align-middle mr-1"></span>
                 </span>
               )}
-              Khoa Khoa học và Kỹ thuật Máy tính
+              {role==="admin"?"Phòng Quản Trị":"Khoa Khoa Học và Kỹ Thuật Máy Tính"}
             </span>
           </div>
         )}

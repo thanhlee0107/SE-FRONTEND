@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { addNotificationWithTimeout } from "../features/Notification/toastNotificationSlice";
 
-
-
 export const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,9 +14,13 @@ export const LoginPage = () => {
   const [error, setError] = useState("");
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  
+  const role = useSelector((state) => state.auth.role);
   if (isAuthenticated) {
-    return <Navigate to="/home" replace />;
+    if (role === "user") {
+      return <Navigate to="/home" />;
+    } else {
+      return <Navigate to="/admin-home" />;
+    }
   }
 
   // Regex pattern to validate an email ending with @hcmut.edu.vn
@@ -29,7 +31,9 @@ export const LoginPage = () => {
 
     // Check if the username is a valid HCMUT email and if the password is at least 6 characters
     if (!emailPattern.test(email)) {
-      setError("Username must be a valid HCMUT email (e.g., user@hcmut.edu.vn).");
+      setError(
+        "Username must be a valid HCMUT email (e.g., user@hcmut.edu.vn)."
+      );
       return;
     }
     if (password.length < 6) {
@@ -40,7 +44,6 @@ export const LoginPage = () => {
     setError(""); // Clear any existing errors if inputs are valid
 
     try {
-      
       const response = await fetch("http://localhost:3003/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,7 +55,6 @@ export const LoginPage = () => {
       }
 
       const data = await response.json();
-      
 
       if (response.ok && data.accessToken) {
         dispatch(loginSuccess(data.accessToken));
@@ -65,7 +67,7 @@ export const LoginPage = () => {
         );
 
         navigate("/home");
-      } 
+      }
     } catch (error) {
       dispatch(
         addNotificationWithTimeout({
@@ -84,7 +86,6 @@ export const LoginPage = () => {
     setError("");
   };
 
-
   return (
     <div className="bg-[#e2e2e2] flex flex-col items-center w-full h-full">
       <div className="bg-slate-50 w-[85%] max-w-[1280px]  relative pt-2">
@@ -102,8 +103,8 @@ export const LoginPage = () => {
         <div className="flex  bg-white rounded-lg shadow-lg p-0 md:p-4">
           {/* Login Form */}
 
-            {/* Login Form Section */}
-            <div className="bg-[#e2e2e2] p-6 rounded-lg shadow-md w-full md:w-2/3">
+          {/* Login Form Section */}
+          <div className="bg-[#e2e2e2] p-6 rounded-lg shadow-md w-full md:w-2/3">
             <h2 className="text-[#990033] font-semibold text-2xl mb-4">
               Enter your Username and Password
             </h2>
@@ -120,11 +121,9 @@ export const LoginPage = () => {
                   value={email}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full md:w-3/4 mt-1 p-2 bg-[#e8f0fe] rounded border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                  
                   required
                 />
               </label>
-              
 
               {/* Password Input */}
               <label className="flex flex-col">
@@ -134,22 +133,21 @@ export const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full md:w-3/4 mt-1 p-2 bg-[#e8f0fe] rounded border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                  
                   required
                 />
               </label>
 
-            {/* Warning Checkbox */}
-            <div className="flex items-center pb-1 mb-2 border-b border-b-gray-300 ">
-              <input type="checkbox" className="mr-2" />
-              <span className="text-[#777]">
-                Warn me before logging me into other sites.
-              </span>
-            </div>
+              {/* Warning Checkbox */}
+              <div className="flex items-center pb-1 mb-2 border-b border-b-gray-300 ">
+                <input type="checkbox" className="mr-2" />
+                <span className="text-[#777]">
+                  Warn me before logging me into other sites.
+                </span>
+              </div>
 
-            {/* Action Buttons */}
-             {/* Action Buttons */}
-             <div className="flex gap-2">
+              {/* Action Buttons */}
+              {/* Action Buttons */}
+              <div className="flex gap-2">
                 <button
                   type="submit"
                   className="px-6 py-2 bg-[#006dcc] text-white rounded shadow hover:bg-[#005bb5]"
@@ -165,21 +163,18 @@ export const LoginPage = () => {
                 </button>
               </div>
 
-
-            {/* Change Password Link */}
-            <div className="mt-4">
-              <a href="#" className="text-[#0000ee] underline text-m">
-                Change password?
-              </a>
-            </div>
+              {/* Change Password Link */}
+              <div className="mt-4">
+                <a href="#" className="text-[#0000ee] underline text-m">
+                  Change password?
+                </a>
+              </div>
             </form>
           </div>
 
           {/* Information Section */}
           <div className="hidden md:block bg-white p-2 ml-2  w-full ">
-            <h2 className="text-[#990033] font-semibold text-lg ">
-              Languages
-            </h2>
+            <h2 className="text-[#990033] font-semibold text-lg ">Languages</h2>
             <div className="flex ml-2  gap-4 mb-2">
               <a href="#" className="text-[#0000ee] underline">
                 Vietnamese
@@ -222,12 +217,17 @@ export const LoginPage = () => {
           </div>
         </div>
       </div>
-    <div className="w-[85%] pb-16">
-      <div className=" text-gray-600 text-m mt-4">
-          <p>Copyright © 2011 - 2012 Ho Chi Minh University of Technology. All rights reserved.</p>
-          <p className="text-[#0000ee] underline mt-2">Powered by Jasig CAS 3.5.1</p>
+      <div className="w-[85%] pb-16">
+        <div className=" text-gray-600 text-m mt-4">
+          <p>
+            Copyright © 2011 - 2012 Ho Chi Minh University of Technology. All
+            rights reserved.
+          </p>
+          <p className="text-[#0000ee] underline mt-2">
+            Powered by Jasig CAS 3.5.1
+          </p>
         </div>
-        </div>
+      </div>
     </div>
   );
 };

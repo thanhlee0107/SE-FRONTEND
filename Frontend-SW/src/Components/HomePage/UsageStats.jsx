@@ -21,7 +21,7 @@ const UsageStatistics = () => {
     ],
     datasets: [
       {
-        label: "Thống kê tần suất đăng nhập",
+        label: "Thống kê tần suất sử dụng dịch vụ in ấn",
         data: [1, 20, 2, 4, 1, 22, 22, 6, 10, 12, 18, 21],
         backgroundColor: "red",
         borderWidth: 1,
@@ -37,7 +37,7 @@ const UsageStatistics = () => {
       },
       title: {
         display: true,
-        text: "Thống Kê Tần Suất Đăng Nhập", 
+        text: "Thống Kê Tần Suất Sử Dụng Dịch Vụ In Ấn", 
         font: {
           size: 16,
           weight: "bold", 

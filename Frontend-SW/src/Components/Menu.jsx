@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import NavigationItem  from "./NavigationItem";
-
+import NavigationItem from "./NavigationItem";
+import { useSelector } from "react-redux";
 
 export const Menu = () => {
-  const menus = [
+  const role = useSelector((state) => state.auth.role);
+
+  const menusUser = [
     {
       title: "Sinh viên",
       submenus: [
@@ -26,7 +28,10 @@ export const Menu = () => {
         { name: "Đăng ký hoãn thi", link: "/exam-delay" },
         { name: "Đăng ký thông tin văn bằng", link: "/degree-info" },
         { name: "Đăng ký rút môn học", link: "/withdraw-course" },
-        { name: "Đăng ký thông tin CC tin học", link: "/it-certification-info" },
+        {
+          name: "Đăng ký thông tin CC tin học",
+          link: "/it-certification-info",
+        },
       ],
     },
     {
@@ -37,9 +42,26 @@ export const Menu = () => {
       ],
     },
   ];
-  
+
+  const menuAdmin = [
+    {
+      title: "Quản trị in ấn",
+      submenus: [
+        { name: "Quản lý máy in", link: "/printer-manage" },
+        { name: "Xem lịch sử in ấn", link: "/History-log" },
+      ],
+    },
+  ];
+
+  let menus = [];
+
+  if (role === "user") {
+    menus = menusUser;
+  } else {
+    menus = menuAdmin;
+  }
+
   const [openIndexes, setOpenIndexes] = React.useState([]);
-  
 
   const toggleDropdown = (index) => {
     setOpenIndexes(
@@ -53,14 +75,14 @@ export const Menu = () => {
   return (
     <div className="h-full bg-outerSpace">
       {menus.map((menu, menuIndex) => (
-        <div key={menuIndex} className="relative">
+        <div key={menuIndex} className="flex flex-col">
           {/* Menu Title */}
           <button
-            className="bg-outerSpace text-[#b8c7ce] hover:text-white px-4 py-4 cursor-pointer w-full text-left flex items-center hover:bg-[#1e282c]"
+            className="bg-outerSpace text-[#b8c7ce] hover:text-white ml-4 py-4 cursor-pointer text-left flex flex-row items-center hover:bg-[#1e282c]"
             onClick={() => toggleDropdown(menuIndex)}
           >
-            {/* Hamburger Icon on the Left */}
-            <span className="mr-2">
+            {/* Hamburger Icon */}
+            <div className="mr-2 flex-shrink-0">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -75,20 +97,20 @@ export const Menu = () => {
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
-            </span>
+            </div>
 
             {/* Menu Title */}
-            <span className="text-sm w-56">{menu.title}</span>
+            <div className="flex-grow text-sm">{menu.title}</div>
 
-            {/* Arrow Icon on the Right */}
-            <span
-              className={` transform transition-transform duration-300 ${
+            {/* Arrow Icon */}
+            <div
+              className={`flex-shrink-0 mr-4 transform transition-transform duration-300 ${
                 openIndexes.includes(menuIndex) ? "rotate-0" : "rotate-90"
               }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`h-5 w-5 transform transition-transform duration-500 `}
+                className="h-5 w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -98,7 +120,7 @@ export const Menu = () => {
                   clipRule="evenodd"
                 />
               </svg>
-            </span>
+            </div>
           </button>
 
           {/* Dropdown Submenus */}
@@ -122,11 +144,10 @@ export const Menu = () => {
                       : "opacity-0"
                   } flex items-center`}
                   style={{
-                    height: "2.5rem", 
+                    height: "2.5rem",
                   }}
                 >
                   <NavigationItem submenu={submenu.name} link={submenu.link} />
-                
                 </div>
               ))}
             </div>
@@ -136,7 +157,7 @@ export const Menu = () => {
       <div key={"Final"} className="relative">
         {/* Menu Title */}
         <button
-          className="bg-outerSpace text-[#b8c7ce] hover:text-white px-4 py-4 cursor-pointer w-full text-left flex items-center"
+          className="bg-outerSpace text-[#b8c7ce] hover:text-white ml-4 py-4 cursor-pointer text-left flex flex-row items-center hover:bg-[#1e282c]"
           onClick={() => toggleDropdown("Final")}
         >
           {/* Hamburger Icon on the Left */}
@@ -155,7 +176,7 @@ export const Menu = () => {
           </span>
 
           {/* Menu Title */}
-          <span className="text-sm w-56">Tài liệu hướng dẫn</span>
+          <span className="text-sm">Tài liệu hướng dẫn</span>
         </button>
       </div>
     </div>

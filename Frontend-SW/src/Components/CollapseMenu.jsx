@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import NavigationItem  from "./NavigationItem";
-
+import NavigationItem from "./NavigationItem";
+import { useSelector } from "react-redux";
 export const CollapsedMenu = () => {
-  const menus = [
+  const role = useSelector((state) => state.auth.role);
+
+  const menusUser = [
     {
       title: "Sinh viên",
       submenus: [
@@ -25,7 +27,10 @@ export const CollapsedMenu = () => {
         { name: "Đăng ký hoãn thi", link: "/exam-delay" },
         { name: "Đăng ký thông tin văn bằng", link: "/degree-info" },
         { name: "Đăng ký rút môn học", link: "/withdraw-course" },
-        { name: "Đăng ký thông tin CC tin học", link: "/it-certification-info" },
+        {
+          name: "Đăng ký thông tin CC tin học",
+          link: "/it-certification-info",
+        },
       ],
     },
     {
@@ -36,6 +41,24 @@ export const CollapsedMenu = () => {
       ],
     },
   ];
+
+  const menuAdmin = [
+    {
+      title: "Quản trị in ấn",
+      submenus: [
+        { name: "Quản lý máy in", link: "/printer-manage" },
+        { name: "Xem lịch sử in ấn", link: "/History-log" },
+      ],
+    },
+  ];
+
+  let menus = [];
+
+  if (role === "user") {
+    menus = menusUser;
+  } else {
+    menus = menuAdmin;
+  }
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -48,7 +71,6 @@ export const CollapsedMenu = () => {
           onMouseEnter={() => setHoveredIndex(menuIndex)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
-          
           <button className="w-full h-10 text-[#b8c7ce] hover:text-white hover:bg-[#1e282c] px-4 py-4 flex justify-center items-center">
             <span>
               <svg
@@ -69,25 +91,27 @@ export const CollapsedMenu = () => {
           </button>
 
           {/* Submenu */}
-          {hoveredIndex === menuIndex && (<div
-            className={`absolute top-0 left-[5vw] w-56 bg-[#2c3b41] shadow-lg  transition-opacity duration-300 ${
-              hoveredIndex === menuIndex ? "opacity-100 visible" : "opacity-0 invisible"
-            } z-10`}
-            
-          >
-            <div className=" px-4 py-2 h-10  text-white font-bold bg-outerSpace ">
-              {menu.title}
-              
-            </div>
-            {menu.submenus.map((submenu, subIndex) => (
-              <div
-                key={subIndex}
-                className="px-2 py-2 text-sm text-[#b8c7ce] hover:text-white"
-              >
-               <NavigationItem submenu={submenu.name} link={submenu.link} />
+          {hoveredIndex === menuIndex && (
+            <div
+              className={`absolute top-0 left-[5vw] w-56 bg-[#2c3b41] shadow-lg  transition-opacity duration-300 ${
+                hoveredIndex === menuIndex
+                  ? "opacity-100 visible"
+                  : "opacity-0 invisible"
+              } z-10`}
+            >
+              <div className=" px-4 py-2 h-10  text-white font-bold bg-outerSpace ">
+                {menu.title}
               </div>
-            ))}
-          </div>)}
+              {menu.submenus.map((submenu, subIndex) => (
+                <div
+                  key={subIndex}
+                  className="px-2 py-2 text-sm text-[#b8c7ce] hover:text-white"
+                >
+                  <NavigationItem submenu={submenu.name} link={submenu.link} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ))}
 
@@ -98,7 +122,7 @@ export const CollapsedMenu = () => {
         onMouseLeave={() => setHoveredIndex(null)}
       >
         <button className="w-full text-[#b8c7ce] hover:text-white px-4 py-4 flex justify-center items-center">
-        <span className="">
+          <span className="">
             <svg
               className="h-5 w-5"
               viewBox="0 0 13 15"
@@ -114,7 +138,9 @@ export const CollapsedMenu = () => {
         </button>
         <div
           className={`absolute top-0 left-full z-10 bg-[#2c3b41] w-56 shadow-lg  transition-opacity duration-300 ${
-            hoveredIndex === "Final" ? "opacity-100 visible" : "opacity-0 invisible"
+            hoveredIndex === "Final"
+              ? "opacity-100 visible"
+              : "opacity-0 invisible"
           }`}
         >
           <div className="px-4 py-2 text-[#b8c7ce]">Tài liệu hướng dẫn</div>

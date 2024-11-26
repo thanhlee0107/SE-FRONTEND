@@ -5,9 +5,13 @@ import { LoginPage } from "./Page/login";
 import { HomePage } from "./Page/HomePage";
 import { ProtectedRoute } from "./protectedRoute";
 import { PrintingPage } from "./Page/PrintingPage";
-
-
+import { AdminHomePage } from "./Page/AdminHomePage";
+import { PrinterMangement } from "./Page/PrinterMange";
+import { useSelector } from "react-redux";
 function App() {
+  const role= useSelector((state) => state.auth.role);
+  
+
   return (
     <BrowserRouter>
       <Routes>
@@ -17,7 +21,7 @@ function App() {
           path="/home"
           element={
             <ProtectedRoute>
-              <HomePage />
+              {role === "user" ? <HomePage /> : <AdminHomePage />}
             </ProtectedRoute>
           }
         />
@@ -26,6 +30,14 @@ function App() {
           element={
             <ProtectedRoute>
               <PrintingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-home"
+          element={
+            <ProtectedRoute>
+              <AdminHomePage />
             </ProtectedRoute>
           }
         />
