@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { PDFDocument, degrees, rgb } from "pdf-lib";
 import { addNotificationWithTimeout } from "@/features/Notification/toastNotificationSlice";
 import { useDispatch } from "react-redux";
+import { original } from "@reduxjs/toolkit";
 const checkValuesNotNull = (values) => {
   for (const [key, value] of values.entry()) {
     if (value === null || value === undefined || value === "") {
@@ -144,14 +145,13 @@ const PrintForm = () => {
           const isSourceLandscape = width > height;
           
           const isTargetLandscape = targetWidth > targetHeight;
-          console.log("Is target landscape:", isTargetLandscape)
+          
 
           const scaleX =
             isSourceLandscape !== isTargetLandscape
               ? targetWidth / width
               : targetHeight / height;
-          console.log(targetWidth, targetHeight, width, height)
-        console.log("Scale X:", scaleX)
+          
           const scaleY =
             isSourceLandscape !== isTargetLandscape
               ? targetHeight / height
@@ -200,8 +200,12 @@ const PrintForm = () => {
 
         const { width: paperWidth, height: paperHeight } =
           paperSize === "A4"
+          ? layout === "Portrait"
             ? { width: 595.28, height: 841.89 }
-            : { width: 841.89, height: 1190.55 };
+            : { width: 841.89, height: 595.28 }
+          : layout === "Portrait"
+          ? { width: 841.89, height: 1190.55 }
+          : { width: 1190.55, height: 841.89 };
 
         const rows = perSheet === 2 ? 1 : perSheet === 4 ? 2 : 4;
         const cols = perSheet / rows;
@@ -214,6 +218,7 @@ const PrintForm = () => {
           for (let j = 0; j < perSheet && i + j < pdfDoc.getPageCount(); j++) {
             // Embed the page instead of copying
             const originalPage = pdfDoc.getPages()[i + j];
+            originalPage.setRotation(degrees(layout === "Landscape" ? 90 : 0));
             const embeddedPage = await perSheetPdfDoc.embedPage(originalPage);
 
             const x = (j % cols) * cellWidth;
