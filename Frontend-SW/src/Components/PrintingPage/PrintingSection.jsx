@@ -76,7 +76,7 @@ export const PrintingSection = () => {
             <div className={`transition-opacity duration-100 delay-100 ${
             currentStep === step.id ? "opacity-100" : "opacity-0"
           } `}>
-            { currentStep === step.id ?<StepComponents />:null}
+            { currentStep === step.id ?<StepComponents stepID={step.id} />:null}
             </div>
            </div>
             
