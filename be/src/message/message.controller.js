@@ -2,10 +2,9 @@ const messageModule = require("./message.module");
 
 exports.insertMessage = async (req, res) => {
   const senderId = req.user.id;
-  const receiverId = req.body.receiverId;
   const message = req.body.message;
   try {
-    messageModule.insertMessage(senderId, receiverId, message);
+    messageModule.insertMessage(senderId, message);
     return res.status(201).json({ message: "Message sent" });
   } catch (err) {
     return res.status(400).json({ message: err.message || err });

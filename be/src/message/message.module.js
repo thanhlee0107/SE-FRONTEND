@@ -1,16 +1,31 @@
 const db = require("../../config/db");
 
-exports.insertMessage = (senderId, receiverId, message) => {
-  const query = `
-        INSERT INTO message (sender_id, receiver_id, message) VALUES (?, ?, ?)
-    `;
-  db.query(query, [senderId, receiverId, message], (err) => {
+exports.insertMessage = (senderId, message) => {
+  const adminQuery = `
+  SELECT id FROM user WHERE role = 'admin';
+`;
+
+  db.query(adminQuery, (err, results) => {
     if (err) {
-      console.log("Error inserting message:", err);
-    } else {
-      console.log("Message inserted");
-      return { message: "Message sent" };
+      console.log("Error fetching admins:", err);
+      throw err;
+      return;
     }
+
+    const insertMessageQuery = `
+  INSERT INTO message (sender_id, receiver_id, message) VALUES (?, ?, ?)
+`;
+
+    results.forEach((admin) => {
+      db.query(insertMessageQuery, [senderId, admin.id, message], (err) => {
+        if (err) {
+          console.log(`Error inserting message for admin ID ${admin.id}:`, err);
+          throw err;
+        } else {
+          console.log(`Message sent to admin ID ${admin.id}`);
+        }
+      });
+    });
   });
 };
 
