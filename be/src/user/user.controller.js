@@ -95,10 +95,14 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getPageBalance = async (req, res) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   try{
     const result = await User.getPageBalanceById(id);
-    return result;
+    if (!result) {
+      return res.status(404).json({ message: "Page balance not found" });
+    }
+    console.log(result);
+    return res.status(200).json({message: "query success", result});
   } catch(err){
     throw new Error(err);
   }

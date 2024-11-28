@@ -10,9 +10,18 @@ const createPrinterTable = `CREATE TABLE IF NOT EXISTS Printer(
     Building VARCHAR(3),
     Floor INT,
     Description VARCHAR(200),
+    printWaiting INT DEFAULT 0,
     PRIMARY KEY (ID)
 );
 `;
+
+db.query(createPrinterTable, (err) => {
+  if (err) {
+    console.log("Error creating printers table:", err);
+  } else {
+    console.log("Printers table created");
+  }
+});
 
 const createConfigTable = `CREATE TABLE IF NOT EXISTS Config (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,14 +90,6 @@ const restartPrinterDatabase = async () => {
       console.log("Error deleting Printer table:", err);
     } else {
       console.log("Printer table deleted");
-    }
-  });
-
-  db.query(createPrinterTable, (err) => {
-    if (err) {
-      console.log("Error creating printers table:", err);
-    } else {
-      console.log("Printers table created");
     }
   });
 

@@ -42,6 +42,12 @@ const printingController = require("./printing.controller");
  *               Color:
  *                 type: boolean
  *                 description: True for color printing, false for black and white
+ *               File:
+ *                 type: string
+ *                 description: File need printing
+ *               Side:
+ *                 type: string
+ *                 description: Single or double
  *             example:
  *               IDPrinter: "1"
  *               Name: "Word Document"
@@ -49,6 +55,8 @@ const printingController = require("./printing.controller");
  *               Amount: 10
  *               Size: "A3"
  *               Color: true
+ *               File: null
+ *               Side: "Single"
  *     responses:
  *       200:
  *         description: Print request created successfully

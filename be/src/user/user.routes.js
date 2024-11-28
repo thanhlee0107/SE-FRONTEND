@@ -304,7 +304,7 @@ router.delete("/:id", userController.deleteUser);
  *                   type: integer
  *                   description: The page balance of the user
  *       404:
- *         description: User not found
+ *         description: Page balance not found
  *       500:
  *         description: Server error
  */
