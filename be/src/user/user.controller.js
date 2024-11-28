@@ -93,3 +93,13 @@ exports.deleteUser = async (req, res) => {
     return res.status(400).json({ message: err.message || err });
   }
 };
+
+exports.getPageBalance = async (req, res) => {
+  const id = req.params.id;
+  try{
+    const result = await User.getPageBalanceById(id);
+    return result;
+  } catch(err){
+    throw new Error(err);
+  }
+}

@@ -179,3 +179,13 @@ exports.deleteUserById = async (id) => {
     throw new Error(err);
   }
 };
+
+//Get Page balance by ID
+exports.getPageBalanceById = async (id) => {
+  try{
+    const result = await queryDatabase(`SELECT pageBalance FROM user WHERE id = ?`, [id]);
+    return result;
+  } catch(err){
+    throw new Error(err);
+  }
+}

@@ -279,4 +279,36 @@ router.get("/email/:email", userController.getUserByEmail);
  */
 router.delete("/:id", userController.deleteUser);
 
+/**
+ * @swagger
+ * /user/page-balance/{id}:
+ *   get:
+ *     summary: Get the page balance of a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: The page balance of the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pageBalance:
+ *                   type: integer
+ *                   description: The page balance of the user
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/page-balance/:id", userController.getPageBalance);
+
+
 module.exports = router;

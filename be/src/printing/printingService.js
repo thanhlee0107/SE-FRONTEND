@@ -92,10 +92,11 @@ exports.handlePrintingRequest = async (IDUser, req) => {
     // Kiểm tra thông tin đầu vào
     if (!IDPrinter || !Name || !Type || !Amount || !Size || !Color) {
       console.error("Thiếu thông tin, không thể thêm công việc vào hàng đợi.");
-      return;
+      throw new Error("Thiếu thông tin, không thể thêm công việc vào hàng đợi.");
     }
     //Chỗ này sẽ bổ sung sau các hàm check điều kiện xem coi tài khoản của người dùng có đủ giấy có size và số lượng theo yêu cầu hay không;
     const isValid = true;
+    
     //---------------------------------------------------------------------------------------------
 
     if (isValid) {
