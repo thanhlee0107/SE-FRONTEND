@@ -4,15 +4,15 @@ import { PDFDocument, degrees, rgb } from "pdf-lib";
 import { addNotificationWithTimeout } from "@/features/Notification/toastNotificationSlice";
 import { useDispatch } from "react-redux";
 import { original } from "@reduxjs/toolkit";
-const checkValuesNotNull = (values) => {
-  for (const [key, value] of values.entry()) {
-    if (value === null || value === undefined || value === "") {
-      console.error(`The value for "${key}" is missing or invalid:`, value);
-      return false;
-    }
-  }
-  return true;
-};
+import { modify,reset } from "@/features/Printing/PrintForm";
+import {
+  goToStep,
+  markCompleted,
+  markUncompleted,
+} from "@/features/PrintingStep/printingStepSlice";
+
+import { truncateFileName } from "@/utils/helpers";
+
 
 const PrintForm = () => {
   const [files, setFiles] = useState([]);
@@ -26,8 +26,11 @@ const PrintForm = () => {
   const [pageSelection, setPageSelection] = useState("Tất cả trang");
   const [customPageSelection, setCustomPageSelection] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [filetoSend, setFiletoSend] = useState(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [pageCount, setPageCount] = useState(0);
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
@@ -123,6 +126,8 @@ const PrintForm = () => {
     if (isImage) {
       const url = URL.createObjectURL(file.content);
       setPreviewUrl(url);
+      setFiletoSend(url);
+      setPageCount(1);
       console.log("Image preview URL generated.");
       return;
     }
@@ -314,6 +319,9 @@ const PrintForm = () => {
         pdfDoc.getPages().forEach((page) => page.setRotation(degrees(90)));
       }
 
+      //get page number
+      setPageCount(pdfDoc.getPageCount());
+
       // Step 5: Handle Color
 
       // Final Save
@@ -327,6 +335,7 @@ const PrintForm = () => {
       const url = URL.createObjectURL(blob);
 
       setPreviewUrl(url);
+      setFiletoSend(url);
       console.log("PDF processing completed.");
     } catch (error) {
       console.error("Error during PDF processing:", error);
@@ -344,19 +353,37 @@ const PrintForm = () => {
     setPageSelection("Tất cả trang");
     setCustomPageSelection("");
     setPreviewUrl(null);
+    setFiletoSend(null);
+    dispatch(reset());
+    dispatch(markUncompleted(2));
+  };
+
+  const handleFileSubmit = () => {
+    dispatch(
+      modify({
+        File: filetoSend,
+        Type: selectedFile.type,
+        Color: color=== "Màu" ? true:false,
+        Size: paperSize,
+        Name: selectedFile.name,
+        PageNumber: pageCount,
+      })
+    );
+    dispatch(goToStep(3));
+    dispatch(markCompleted(2));
   }
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       <div className="flex flex-col mb-2">
-        <h3 className="text-base font-semibold">Danh sách file đã tải lên</h3>
+        <label className="label font-semibold">Danh sách file đã tải lên</label>
         <div className="dropdown mt-2 relative">
           <label
             tabIndex={0}
             className="rounded-md bg-gray-500 p-2 cursor-pointer"
             onClick={toggleDropdown}
           >
-            {selectedFile ? selectedFile.name : "Chọn file đã tải lên"}
+            {selectedFile ? truncateFileName(selectedFile.name) : "Chọn file đã tải lên"}
           </label>
           {isDropdownOpen && (
             <ul
@@ -374,7 +401,7 @@ const PrintForm = () => {
                     } hover:bg-outerSpace hover:text-white hover:rounded-lg`}
                     onClick={() => handleSelectAndClose(file)}
                   >
-                    {index + 1}. {file.name}
+                    {index + 1}. {truncateFileName(file.name)}
                   </li>
                 ))
               ) : (
@@ -500,12 +527,12 @@ const PrintForm = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-row justify-center gap-4 mt-4">
+      <div className="flex flex-row justify-center gap-4 mt-6">
         <button
           className="btn btn btn-sm"
           onClick={() => handlePreview(setPreviewUrl)}
         >
-          Preview
+          Xác nhận cài đặt
         </button>
         {previewUrl && (
           <div className="modal modal-open">
@@ -531,23 +558,24 @@ const PrintForm = () => {
                   className="btn btn-sm"
                   onClick={() => setPreviewUrl(null)}
                 >
-                  Close
+                  OK
                 </button>
               </div>
             </div>
           </div>
         )}
-        <button
-          className="btn btn-error btn-sm"
-          onClick={() => handleReset()}
-        >
+        <button className="btn btn-error btn-sm" onClick={() => handleReset()}>
           Reset
         </button>
         <button
           className="btn btn-success btn-sm"
-          onClick={() => alert("Confirmed!")}
+          onClick={() => handleFileSubmit()}
+          disabled={!(selectedFile && filetoSend)}
+          style={{
+            cursor: filetoSend && selectedFile ? "pointer" : "not-allowed",
+          }}
         >
-          Confirm
+          Tiếp tục
         </button>
       </div>
     </div>

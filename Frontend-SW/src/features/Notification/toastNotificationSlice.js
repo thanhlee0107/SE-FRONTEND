@@ -9,6 +9,7 @@ const toastNotificationSlice = createSlice({
     addNotification: (state, action) => {
       // Ensure the notification has required properties
       const { id, message, type } = action.payload;
+    
       if (id && message && type) {
         state.push(action.payload); // Add notification
       } else {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { addNotificationWithTimeout } from "@/features/Notification/toastNotificationSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import UploadIcon from "@/assets/IconUpload.svg?react";
 import FileIcon from "@/assets/FileIcon.svg?react";
 import {
@@ -8,12 +9,20 @@ import {
   markCompleted,
   markUncompleted,
 } from "@/features/PrintingStep/printingStepSlice";
+
+
+import { truncateFileName } from "@/utils/helpers";
+
+
 const FileUploadWithDragAndDrop = () => {
   const [files, setFiles] = useState([]); // State for displaying files
   const [db, setDb] = useState(null); // IndexedDB instance
   const [isDragging, setIsDragging] = useState(false); // Dragging state
 
   const dispatch = useDispatch();
+
+  let completed = useSelector((state) => state.steps.steps[0].completed);
+
 
   // Initialize IndexedDB
   useEffect(() => {
@@ -175,6 +184,7 @@ const FileUploadWithDragAndDrop = () => {
           multiple
           accept=".pdf,.png,.jpeg"
           onChange={(e) => handleFileUpload(e.target.files)}
+          disabled={completed}
           className="file-input file-input-bordered w-full max-w-xs"
         />
       </div>
@@ -190,7 +200,7 @@ const FileUploadWithDragAndDrop = () => {
             >
               <FileIcon className="w-8 h-8 mr-2" />
               <div>
-                <span className="font-medium">{file.name}</span> -{" "}
+                <span className="font-medium ">{truncateFileName(file.name)}</span> -{" "}
                 <span className="text-gray-500 text-sm">{file.size}</span>
               </div>
               <button

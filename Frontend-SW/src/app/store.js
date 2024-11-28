@@ -4,12 +4,15 @@ import toastNotificationReducer from "../features/Notification/toastNotification
 import tokenValidationMiddleware from "../features/auth/tokenVerifyExpiration";
 import sidebarColapseSliceReducer from "../features/HomePage/collapseSideBar";
 import stepsReducer from "../features/PrintingStep/printingStepSlice";
+import PrintFormSliceReducer from "../features/Printing/PrintForm";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     toastNotifications: toastNotificationReducer,
     sidebarColapse: sidebarColapseSliceReducer,
-    steps: stepsReducer
+    steps: stepsReducer,
+    PrintForm: PrintFormSliceReducer
+
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(tokenValidationMiddleware),
