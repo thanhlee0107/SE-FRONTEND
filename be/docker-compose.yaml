@@ -3,12 +3,12 @@ services:
     dev-db:
         image: mysql:8.0.36
         ports:
-            - 3307:3306
+            - 3306:3306
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: CNPM_smartprint
-            MYSQL_USER: root
-            MYSQL_PASSWORD: root
+            MYSQL_USER: devUser
+            MYSQL_PASSWORD: devPassword
         volumes:
             - dev-db-data:/var/lib/mysql
 
