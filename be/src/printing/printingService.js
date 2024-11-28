@@ -34,7 +34,8 @@ async function processPrinterQueue(IDPrinter) {
         task.Date,
         "Completed"
       );
-      await printerService.updateprintwaiting(IDPrinter, -1);
+      await userService.updatePageBalanceById(task.IDUser, -task.Amount);
+      await printerService.updateprintwaiting(IDPrinter, -1);// cập nhật lại hàng đợi của máy in
     } else {
       console.log(`Máy in ${IDPrinter}: Không có công việc, chờ...`);
       await new Promise((resolve) => setTimeout(resolve, 20000)); // Chờ 20 giây trước khi kiểm tra lại hàng đợi
@@ -108,7 +109,7 @@ exports.handlePrintingRequest = async (IDUser, req) => {
         //update thông tin vào database
         await dbPrinting.checkAndInsertPrinting(IDFile, IDPrinter, IDUser);
         await addPrinterJob(IDUser, IDFile, req);
-        await printerService.updateprintwaiting(IDPrinter, 1);
+        await printerService.updateprintwaiting(IDPrinter, 1); // cập nhật lại hàng đợi của máy in
     } else {
       throw new Error("Tài khoản này Không đủ giấy để thực hiện yêu cầu in");
     }

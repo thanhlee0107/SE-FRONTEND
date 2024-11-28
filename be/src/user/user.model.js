@@ -189,3 +189,12 @@ exports.getPageBalanceById = async (id) => {
     throw new Error(err);
   }
 }
+
+exports.updatePageBalanceById = async (id, value) => {
+  try{
+    const result = await queryDatabase(`UPDATE user SET pageBalance = pageBalance + ? WHERE id = ?`, [value, id]);
+    return result;
+  } catch(err){
+    throw new Error(err);
+  }
+}
