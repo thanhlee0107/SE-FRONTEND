@@ -59,6 +59,7 @@ const FileUploadWithDragAndDrop = () => {
       id: Date.now() + Math.random(),
       name: file.name,
       size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+      type: file.type,
       content: file, // Store the actual file object
     };
 
@@ -95,7 +96,7 @@ const FileUploadWithDragAndDrop = () => {
 
     const validFiles = [];
     const errors = [];
-
+    
     Array.from(uploadedFiles).forEach((file) => {
       if (!validFileTypes.includes(file.type)) {
         errors.push(`Invalid file type: ${file.name}`);
@@ -216,7 +217,7 @@ const FileUploadWithDragAndDrop = () => {
             const store = transaction.objectStore("files");
             store.clear();
           }}
-          className="bg-outerSpace text-white px-3 py-2 rounded-md hover:bg-red"
+          className="btn btn-error btn-sm"
         >
           Reset
         </button>
@@ -228,7 +229,7 @@ const FileUploadWithDragAndDrop = () => {
               dispatch(goToStep(2));
             }
           }}
-          className="bg-outerSpace text-white px-3 py-2 rounded-md hover:bg-green-500"
+          className="btn btn-success btn-sm"
           style={{
             cursor: files.length > 0
               

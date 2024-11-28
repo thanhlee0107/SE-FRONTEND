@@ -27,6 +27,15 @@ const PrintForm = () => {
   const [customPageSelection, setCustomPageSelection] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+
+  const handleSelectAndClose = (file) => {
+    handleFileSelect(file); // Call the selection handler
+    setIsDropdownOpen(false); // Close the dropdown
+  };
+
   const dispatch = useDispatch();
 
   // Function to read all files from IndexedDB
@@ -76,7 +85,7 @@ const PrintForm = () => {
     setSelectedFile(file);
   };
 
-  const handleSubmit = async (setPreviewUrl) => {
+  const handlePreview = async (setPreviewUrl) => {
     if (!files || files.length === 0) {
       alert("Please upload a file first!");
       return;
@@ -94,6 +103,7 @@ const PrintForm = () => {
     });
 
     const file = selectedFile;
+
     if (!file) {
       dispatch(
         addNotificationWithTimeout({
@@ -103,12 +113,26 @@ const PrintForm = () => {
       );
       return;
     }
+    console.log("Selected file:", file);
+    const isImage =
+      file.type.startsWith("image/") ||
+      file.name.endsWith(".png") ||
+      file.name.endsWith(".jpeg");
+
+    // Handle image preview
+    if (isImage) {
+      const url = URL.createObjectURL(file.content);
+      setPreviewUrl(url);
+      console.log("Image preview URL generated.");
+      return;
+    }
 
     const isPDF = file.type === "application/pdf" || file.name.endsWith(".pdf");
     if (!isPDF) {
       dispatch(
         addNotificationWithTimeout({
-          message: "The uploaded file is not a PDF file, it will pass through the printer as is.",
+          message:
+            "The uploaded file is not a PDF file, it will pass through the printer as is.",
           type: "info",
         })
       );
@@ -118,126 +142,6 @@ const PrintForm = () => {
     try {
       const arrayBuffer = await file.content.arrayBuffer();
       let pdfDoc = await PDFDocument.load(arrayBuffer);
-      const targetDimensions =
-        paperSize === "A4"
-          ? layout === "Portrait"
-            ? { width: 595.28, height: 841.89 }
-            : { width: 841.89, height: 595.28 }
-          : layout === "Portrait"
-          ? { width: 841.89, height: 1190.55 }
-          : { width: 1190.55, height: 841.89 };
-
-      const { width: targetWidth, height: targetHeight } = targetDimensions;
-
-      // Step 1: Handle Scale
-      if (scale === "Fit với khung in") {
-        const scaleDoc = await PDFDocument.create();
-
-        for (const [index, page] of pdfDoc.getPages().entries()) {
-          const [copiedPage] = await scaleDoc.copyPages(pdfDoc, [index]);
-          const { width, height } = copiedPage.getSize();
-
-          if (width <= 0 || height <= 0) {
-            console.error("Invalid page dimensions:", { width, height });
-            continue; // Skip invalid pages
-          }
-
-          const isSourceLandscape = width > height;
-          
-          const isTargetLandscape = targetWidth > targetHeight;
-          
-
-          const scaleX =
-            isSourceLandscape !== isTargetLandscape
-              ? targetWidth / width
-              : targetHeight / height;
-          
-          const scaleY =
-            isSourceLandscape !== isTargetLandscape
-              ? targetHeight / height
-              : targetWidth / width;
-             
-          const scaleFactor = Math.min(scaleX, scaleY);
-          
-          copiedPage.scaleContent(scaleFactor, scaleFactor);
-
-          const offsetX = (targetWidth - width * scaleFactor) / 2;
-          const offsetY = (targetHeight - height * scaleFactor) / 2;
-          copiedPage.translateContent(offsetX, offsetY);
-
-          copiedPage.setSize(targetWidth, targetHeight);
-          scaleDoc.addPage(copiedPage);
-        }
-
-        pdfDoc = scaleDoc;
-      } else if (scale === "custom" && customScale) {
-        const scaleDoc = await PDFDocument.create();
-        const scaleFactor = parseFloat(customScale);
-
-        if (isNaN(scaleFactor) || scaleFactor <= 0) {
-          console.error("Invalid custom scale factor:", customScale);
-          return;
-        }
-
-        for (const [index, page] of pdfDoc.getPages().entries()) {
-          const [copiedPage] = await scaleDoc.copyPages(pdfDoc, [index]);
-          copiedPage.scaleContent(scaleFactor, scaleFactor);
-          const { width, height } = copiedPage.getSize();
-          const offsetX = (targetWidth - width * scaleFactor) / 2;
-          const offsetY = (targetHeight - height * scaleFactor) / 2;
-          copiedPage.translateContent(offsetX, offsetY);
-          copiedPage.setSize(targetWidth, targetHeight);
-          scaleDoc.addPage(copiedPage);
-        }
-
-        pdfDoc = scaleDoc;
-      }
-
-      // Step 2: Handle Pages Per Sheet
-      if (pagesPerSheet && pagesPerSheet !== "Mặc Định") {
-        const perSheet = parseInt(pagesPerSheet);
-        const perSheetPdfDoc = await PDFDocument.create();
-
-        const { width: paperWidth, height: paperHeight } =
-          paperSize === "A4"
-          ? layout === "Portrait"
-            ? { width: 595.28, height: 841.89 }
-            : { width: 841.89, height: 595.28 }
-          : layout === "Portrait"
-          ? { width: 841.89, height: 1190.55 }
-          : { width: 1190.55, height: 841.89 };
-
-        const rows = perSheet === 2 ? 1 : perSheet === 4 ? 2 : 4;
-        const cols = perSheet / rows;
-        const cellWidth = paperWidth / cols;
-        const cellHeight = paperHeight / rows;
-
-        for (let i = 0; i < pdfDoc.getPageCount(); i += perSheet) {
-          const newPage = perSheetPdfDoc.addPage([paperWidth, paperHeight]);
-
-          for (let j = 0; j < perSheet && i + j < pdfDoc.getPageCount(); j++) {
-            // Embed the page instead of copying
-            const originalPage = pdfDoc.getPages()[i + j];
-            originalPage.setRotation(degrees(layout === "Landscape" ? 90 : 0));
-            const embeddedPage = await perSheetPdfDoc.embedPage(originalPage);
-
-            const x = (j % cols) * cellWidth;
-            const y = paperHeight - Math.floor(j / cols + 1) * cellHeight;
-
-            newPage.drawPage(embeddedPage, {
-              x,
-              y,
-              width: cellWidth,
-              height: cellHeight,
-            });
-          }
-        }
-
-        // Update currentPdfDoc to use the new multi-page document
-        pdfDoc = perSheetPdfDoc;
-      }
-
-      // Step 3: Handle Page Selection
       let selectedPages = [];
       if (pageSelection === "Tất cả trang") {
         selectedPages = Array.from(
@@ -283,15 +187,142 @@ const PrintForm = () => {
         return;
       }
 
+      pdfDoc = finalPdfDoc;
+
+      const targetDimensions =
+        paperSize === "A4"
+          ? layout === "Portrait"
+            ? { width: 595.28, height: 841.89 }
+            : { width: 841.89, height: 595.28 }
+          : layout === "Portrait"
+          ? { width: 841.89, height: 1190.55 }
+          : { width: 1190.55, height: 841.89 };
+
+      const { width: targetWidth, height: targetHeight } = targetDimensions;
+
+      // Step 1: Handle Scale
+      if (scale === "Fit với khung in") {
+        const scaleDoc = await PDFDocument.create();
+
+        for (const [index, page] of pdfDoc.getPages().entries()) {
+          const [copiedPage] = await scaleDoc.copyPages(pdfDoc, [index]);
+          const { width, height } = copiedPage.getSize();
+
+          if (width <= 0 || height <= 0) {
+            console.error("Invalid page dimensions:", { width, height });
+            continue; // Skip invalid pages
+          }
+
+          const isSourceLandscape = width > height;
+
+          const isTargetLandscape = targetWidth > targetHeight;
+
+          const scaleX =
+            isSourceLandscape !== isTargetLandscape
+              ? targetWidth / width
+              : targetHeight / height;
+
+          const scaleY =
+            isSourceLandscape !== isTargetLandscape
+              ? targetHeight / height
+              : targetWidth / width;
+
+          const scaleFactor = Math.min(scaleX, scaleY);
+
+          copiedPage.scaleContent(scaleFactor, scaleFactor);
+
+          const offsetX = (targetWidth - width * scaleFactor) / 2;
+          const offsetY = (targetHeight - height * scaleFactor) / 2;
+          copiedPage.translateContent(offsetX, offsetY);
+
+          copiedPage.setSize(targetWidth, targetHeight);
+          scaleDoc.addPage(copiedPage);
+        }
+
+        pdfDoc = scaleDoc;
+      } else if (scale === "custom" && customScale) {
+        const scaleDoc = await PDFDocument.create();
+        const scaleFactor = parseFloat(customScale);
+
+        if (isNaN(scaleFactor) || scaleFactor <= 0) {
+          console.error("Invalid custom scale factor:", customScale);
+          return;
+        }
+
+        for (const [index, page] of pdfDoc.getPages().entries()) {
+          const [copiedPage] = await scaleDoc.copyPages(pdfDoc, [index]);
+          copiedPage.scaleContent(scaleFactor, scaleFactor);
+          const { width, height } = copiedPage.getSize();
+          const offsetX = (targetWidth - width * scaleFactor) / 2;
+          const offsetY = (targetHeight - height * scaleFactor) / 2;
+          copiedPage.translateContent(offsetX, offsetY);
+          copiedPage.setSize(targetWidth, targetHeight);
+          scaleDoc.addPage(copiedPage);
+        }
+
+        pdfDoc = scaleDoc;
+      }
+
+      // Step 2: Handle Pages Per Sheet
+      if (pagesPerSheet && pagesPerSheet !== "Mặc Định") {
+        const perSheet = parseInt(pagesPerSheet);
+        const perSheetPdfDoc = await PDFDocument.create();
+
+        const { width: paperWidth, height: paperHeight } =
+          paperSize === "A4"
+            ? layout === "Portrait"
+              ? { width: 595.28, height: 841.89 }
+              : { width: 841.89, height: 595.28 }
+            : layout === "Portrait"
+            ? { width: 841.89, height: 1190.55 }
+            : { width: 1190.55, height: 841.89 };
+
+        const rows = perSheet === 2 ? 1 : perSheet === 4 ? 2 : 4;
+        const cols = perSheet / rows;
+        const cellWidth = paperWidth / cols;
+        const cellHeight = paperHeight / rows;
+
+        for (let i = 0; i < pdfDoc.getPageCount(); i += perSheet) {
+          const newPage = perSheetPdfDoc.addPage([paperWidth, paperHeight]);
+
+          for (let j = 0; j < perSheet && i + j < pdfDoc.getPageCount(); j++) {
+            // Embed the page instead of copying
+            const originalPage = pdfDoc.getPages()[i + j];
+            originalPage.setRotation(degrees(layout === "Landscape" ? 90 : 0));
+            const embeddedPage = await perSheetPdfDoc.embedPage(originalPage);
+
+            const x = (j % cols) * cellWidth;
+            const y = paperHeight - Math.floor(j / cols + 1) * cellHeight;
+
+            newPage.drawPage(embeddedPage, {
+              x,
+              y,
+              width: cellWidth,
+              height: cellHeight,
+            });
+          }
+        }
+
+        // Update currentPdfDoc to use the new multi-page document
+        pdfDoc = perSheetPdfDoc;
+      }
+
+      // Step 3: Handle Page Selection
+
       // Step 4: Handle Layout (Landscape/Portrait)
       if (layout === "Landscape") {
-        finalPdfDoc.getPages().forEach((page) => page.setRotation(degrees(90)));
+        pdfDoc.getPages().forEach((page) => page.setRotation(degrees(90)));
       }
 
       // Step 5: Handle Color
 
       // Final Save
-      const modifiedPdfBytes = await finalPdfDoc.save();
+      const modifiedPdfBytes = await pdfDoc.save();
+
+      const newFile = new File([modifiedPdfBytes], file.name, {
+        type: "application/pdf",
+      });
+
       const blob = new Blob([modifiedPdfBytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
 
@@ -302,38 +333,57 @@ const PrintForm = () => {
     }
   };
 
+  const handleReset = () => {
+    setSelectedFile(null);
+    setLayout("Portrait");
+    setPaperSize("A4");
+    setPagesPerSheet("Mặc Định");
+    setColor("Đen Trắng");
+    setScale("Fit với khung in");
+    setCustomScale("");
+    setPageSelection("Tất cả trang");
+    setCustomPageSelection("");
+    setPreviewUrl(null);
+  }
+
   return (
     <div className="p-4">
       <div className="flex flex-col mb-2">
         <h3 className="text-base font-semibold">Danh sách file đã tải lên</h3>
-        <div className="dropdown mt-2 ">
-          <label tabIndex={0} className="rounded-md bg-gray-500 p-2">
+        <div className="dropdown mt-2 relative">
+          <label
+            tabIndex={0}
+            className="rounded-md bg-gray-500 p-2 cursor-pointer"
+            onClick={toggleDropdown}
+          >
             {selectedFile ? selectedFile.name : "Chọn file đã tải lên"}
           </label>
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu bg-white z-[1] rounded-b-md w-[40%] shadow gap-2"
-          >
-            {files.length > 0 ? (
-              files.map((file, index) => (
-                <li
-                  key={file.id}
-                  className={`cursor-pointer text-base p-2 ${
-                    selectedFile && selectedFile.id === file.id
-                      ? "bg-gray-500 text-white font-base rounded-lg"
-                      : ""
-                  } hover:bg-outerSpace hover:text-white hover:rounded-lg`}
-                  onClick={() => handleFileSelect(file)}
-                >
-                  {index + 1}. {file.name}
+          {isDropdownOpen && (
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-white z-[1] rounded-b-md shadow gap-2 absolute "
+            >
+              {files.length > 0 ? (
+                files.map((file, index) => (
+                  <li
+                    key={file.id}
+                    className={`cursor-pointer text-base p-2 ${
+                      selectedFile && selectedFile.id === file.id
+                        ? "bg-gray-500 text-white font-base rounded-lg"
+                        : ""
+                    } hover:bg-outerSpace hover:text-white hover:rounded-lg`}
+                    onClick={() => handleSelectAndClose(file)}
+                  >
+                    {index + 1}. {file.name}
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-gray-500">
+                  Chưa có file nào được tải lên.
                 </li>
-              ))
-            ) : (
-              <li className="text-sm text-gray-500">
-                Chưa có file nào được tải lên.
-              </li>
-            )}
-          </ul>
+              )}
+            </ul>
+          )}
         </div>
       </div>
 
@@ -450,32 +500,53 @@ const PrintForm = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex space-x-4">
+      <div className="flex flex-row justify-center gap-4 mt-4">
         <button
-          className="btn btn-success"
-          onClick={() => handleSubmit(setPreviewUrl)}
+          className="btn btn btn-sm"
+          onClick={() => handlePreview(setPreviewUrl)}
         >
           Preview
         </button>
         {previewUrl && (
           <div className="modal modal-open">
             <div className="modal-box">
-              <h3 className="font-bold text-lg">PDF Preview</h3>
-              <iframe
-                src={previewUrl}
-                className="w-full h-96"
-                frameBorder="0"
-                title="PDF Preview"
-              ></iframe>
+              <h3 className="font-bold text-lg">Preview</h3>
+              {selectedFile.type === "application/pdf" ? (
+                <iframe
+                  src={previewUrl}
+                  className="w-full h-96"
+                  frameBorder="0"
+                  title="PDF Preview"
+                ></iframe>
+              ) : (
+                <img
+                  src={previewUrl}
+                  alt="Image Preview"
+                  className="w-full h-96 object-contain"
+                  style={{ maxHeight: "100%", maxWidth: "100%" }}
+                />
+              )}
               <div className="modal-action">
-                <button className="btn" onClick={() => setPreviewUrl(null)}>
+                <button
+                  className="btn btn-sm"
+                  onClick={() => setPreviewUrl(null)}
+                >
                   Close
                 </button>
               </div>
             </div>
           </div>
         )}
-        <button className="btn btn-error" onClick={() => alert("Confirmed!")}>
+        <button
+          className="btn btn-error btn-sm"
+          onClick={() => handleReset()}
+        >
+          Reset
+        </button>
+        <button
+          className="btn btn-success btn-sm"
+          onClick={() => alert("Confirmed!")}
+        >
           Confirm
         </button>
       </div>
