@@ -93,3 +93,34 @@ exports.deleteUser = async (req, res) => {
     return res.status(400).json({ message: err.message || err });
   }
 };
+
+exports.getPageBalance = async (req, res) => {
+  
+  const mssv = Number(req.params.mssv);
+  try{
+    const result = await User.getPageBalanceByMSSV(mssv);
+    if (!result) {
+      return res.status(404).json({ message: "Page balance not found" });
+    }
+    
+    return res.status(200).json({message: "query success", result});
+  } catch(err){
+    throw new Error(err);
+  }
+}
+
+exports.updatePageBalance = async (req, res) => {
+  
+  const mssv = Number(req.params.mssv);
+  const pageBalance = Number(req.body.pageBalance);
+  try{
+    const result = await User.updatePageBalanceByMSSV(mssv, pageBalance);
+    if (!result) {
+      return res.status(404).json({ message: "Page balance not found" });
+    }
+    console.log(result);
+    return res.status(200).json({message: "Successfully", result});
+  } catch(err){
+    throw new Error(err);
+  }
+}

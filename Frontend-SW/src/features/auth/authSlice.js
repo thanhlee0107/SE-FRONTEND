@@ -6,6 +6,7 @@ const initialState = {
   role: localStorage.getItem("jwt")
     ? jwtDecode(localStorage.getItem("jwt")).payload.role
     : null, // Decode role from JWT
+  mssv: localStorage.getItem("jwt") ? jwtDecode(localStorage.getItem("jwt")).payload.mssv : null,
   isAuthenticated: !!localStorage.getItem("jwt"),
 };
 
@@ -15,7 +16,8 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (state, action) => {
       state.token = action.payload;
-      state.role = jwtDecode(action.payload).payload.role; // Extract role from token
+      state.role = jwtDecode(action.payload).payload.role;
+      state.mssv = jwtDecode(action.payload).payload.mssv; 
       state.isAuthenticated = true;
 
       // Persist to localStorage

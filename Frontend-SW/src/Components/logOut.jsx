@@ -21,8 +21,8 @@ export const LogOut = () => {
 
   return (
     <button
-      onClick={handleLogout}
-      className="px-4 py-2 bg-red text-white rounded hover:bg-red-600"
+      onClick={()=>{handleLogout()}}
+      className="btn btn-error btn-xs text-white rounded hover:bg-red-600"
     >
       Log Out
     </button>

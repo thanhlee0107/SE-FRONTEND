@@ -32,6 +32,9 @@ const stepsSlice = createSlice({
   initialState,
   reducers: {
     goToStep: (state, action) => {
+      if (state.currentStep === 4) {
+        return
+      }
       const targetStep = action.payload;
       state.currentStep = targetStep;
     },
@@ -52,6 +55,9 @@ const stepsSlice = createSlice({
       }
     },
     markUncompleted: (state, action) => {
+      if (state.currentStep === 4) {
+        return
+      }
       const stepIndex = state.steps.findIndex(
         (step) => step.id === action.payload
       );

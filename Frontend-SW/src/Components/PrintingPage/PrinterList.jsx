@@ -13,6 +13,8 @@ export const PrinterList = ({ campus, block, selectedPrinter, onSelectPrinter })
   const [error, setError] = useState("");
   const [filteredPrinters, setFilteredPrinters] = useState([]);
   const token = useSelector((state) => state.auth.token);
+  
+  
 
   const isFetching = useRef(false);
   const dispatch = useDispatch();
@@ -100,6 +102,9 @@ export const PrinterList = ({ campus, block, selectedPrinter, onSelectPrinter })
   if (!campus || !block) {
     return <div className="text-gray-500">Chọn campus và block để tìm máy in.</div>;
   }
+
+  
+
 
   if (error) {
     return <div className="text-red-500">{error}</div>;

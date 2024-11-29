@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { LogOut } from "./logOut";
 import MessageIcon from "/src/assets/message-svgrepo-com.svg?react";
 import NotificationIcon from "/src/assets/Notification.svg?react";
-
+import PagePurchase from "./PagePurchase";
 export const NavBar = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("jwt");
@@ -23,6 +23,13 @@ export const NavBar = () => {
   const decodedToken = token ? jwtDecode(token) : null;
 
   const name = decodedToken?.payload.name || "Unknown User";
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+ 
+
+ 
+
+ 
 
   return (
     <nav className="bg-[#3c8dbc] text-white flex items-center  flex-grow">
@@ -114,10 +121,21 @@ export const NavBar = () => {
             <div className="menu-title font-semibold text-black">
               Hello, {name}
             </div>
-            <LogOut />
+            <div className="flex flex-col gap-2">
+            <button
+        className="btn btn-success btn-xs rounded text-white"
+        onClick={() => setIsModalOpen(true)}
+      >
+        Mua Trang
+      </button>
+              <LogOut />
+            </div>
           </div>
         )}
       </div>
+      {isModalOpen && (
+        <PagePurchase setmodal={setIsModalOpen}/>
+      )}
       {/* Language Selector */}
       <div className="flex items-center gap-2 mr-2">
         {/* Vietnamese Flag */}

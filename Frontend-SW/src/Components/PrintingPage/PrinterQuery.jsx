@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PrinterList } from "./PrinterList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSync } from "@fortawesome/free-solid-svg-icons";
-
+import { useDispatch,useSelector } from "react-redux";
+import { modify} from "@/features/Printing/PrintForm";
 export const PrinterQuery = () => {
   const [campus, setCampus] = useState("");
   const [block, setBlock] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
   const [selectedPrinter, setSelectedPrinter] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(modify({IDPrinter: ""}));
+  }, [dispatch]);
 
   // Define blocks for each campus
   const campusBlocks = {
@@ -17,6 +23,16 @@ export const PrinterQuery = () => {
 
   // Get blocks for the selected campus
   const blocks = campus ? campusBlocks[campus] : [];
+  const handleSelectedPrinter = (printer) => {
+    dispatch(
+      modify({
+        IDPrinter: printer.ID,
+      })
+    );
+
+    setSelectedPrinter(printer);
+  }
+  
 
   return (
     <div className="flex flex-col gap-4">
@@ -29,7 +45,7 @@ export const PrinterQuery = () => {
             value={campus}
             onChange={(e) => {
               setCampus(e.target.value);
-              setBlock(""); // Reset block when campus changes
+              setBlock(""); 
             }}
           >
             <option disabled selected value="">
@@ -73,7 +89,7 @@ export const PrinterQuery = () => {
         </div>
       </div>
       <PrinterList key={reloadKey} campus={campus} block={block} selectedPrinter={selectedPrinter}
-        onSelectPrinter={setSelectedPrinter} />
+        onSelectPrinter={handleSelectedPrinter} />
     </div>
   );
 };
