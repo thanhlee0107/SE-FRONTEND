@@ -72,9 +72,9 @@ const getStatus = () => {
   const random = Math.random() * 100; // Generate a random number between 0 and 100
 
   if (random < 70) {
-    return "online"; 
+    return "online";
   } else if (random < 90) {
-    return "offline"; 
+    return "offline";
   } else {
     return "maintaining";
   }
@@ -90,10 +90,10 @@ const generatePrinterData = () => {
         Math.floor(Math.random() * campusBuilding[campus].length)
       ];
     const brand = brands[Math.floor(Math.random() * brands.length)];
-    const status =  getStatus();
+    const status = getStatus();
     const floor = floors[Math.floor(Math.random() * floors.length)];
     const description = descriptions[floor - 1];
-    const printWaiting = Math.floor(Math.random() * 500) + 1;
+    const printWaiting = status==="online"? Math.floor(Math.random() * 500) + 1:0;
 
     insertStatements.push(
       `(1, 'Printer ${printerId}', '${brand}', '${status}', '${campus}', '${building}', ${floor}, '${description}', ${printWaiting})`
