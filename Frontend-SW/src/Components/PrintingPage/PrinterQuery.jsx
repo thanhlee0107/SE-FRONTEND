@@ -7,6 +7,7 @@ export const PrinterQuery = () => {
   const [campus, setCampus] = useState("");
   const [block, setBlock] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
+  const [selectedPrinter, setSelectedPrinter] = useState(null);
 
   // Define blocks for each campus
   const campusBlocks = {
@@ -60,14 +61,19 @@ export const PrinterQuery = () => {
             </select>
             <button
               className="btn btn-circle btn-xs "
-              onClick={() => setReloadKey((prev) => prev + 1)}
+              onClick={() => {
+                setReloadKey((prev) => prev + 1); 
+                setSelectedPrinter(null);
+                setBlock("");
+              }}
             >
               <FontAwesomeIcon icon={faSync} />
             </button>
           </div>
         </div>
       </div>
-      <PrinterList key={reloadKey} campus={campus} block={block} />
+      <PrinterList key={reloadKey} campus={campus} block={block} selectedPrinter={selectedPrinter}
+        onSelectPrinter={setSelectedPrinter} />
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { PDFDocument, degrees, rgb } from "pdf-lib";
 import { addNotificationWithTimeout } from "@/features/Notification/toastNotificationSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { original } from "@reduxjs/toolkit";
 import { modify,reset } from "@/features/Printing/PrintForm";
 import {
@@ -33,6 +33,9 @@ const PrintForm = () => {
   const [pageCount, setPageCount] = useState(0);
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+
+  const isCompleted = useSelector((state) => state.steps.steps[1].completed);
+  const isCurrent=(useSelector((state) => state.steps.currentStep === 2))
 
   const handleSelectAndClose = (file) => {
     handleFileSelect(file); // Call the selection handler
@@ -355,6 +358,7 @@ const PrintForm = () => {
     setPreviewUrl(null);
     setFiletoSend(null);
     dispatch(reset());
+    dispatch(goToStep(2));
     dispatch(markUncompleted(2));
   };
 
@@ -531,6 +535,7 @@ const PrintForm = () => {
         <button
           className="btn btn btn-sm"
           onClick={() => handlePreview(setPreviewUrl)}
+          disabled={!((!isCompleted)&&isCurrent)}
         >
           Xác nhận cài đặt
         </button>

@@ -58,6 +58,7 @@ export const LoginPage = () => {
 
       if (response.ok && data.accessToken) {
         dispatch(loginSuccess(data.accessToken));
+        
         dispatch(
           addNotificationWithTimeout({
             id: Date.now(),

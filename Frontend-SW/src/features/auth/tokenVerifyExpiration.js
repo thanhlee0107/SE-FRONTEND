@@ -1,6 +1,7 @@
 import { logout } from "./authSlice";
 import { addNotificationWithTimeout } from "../Notification/toastNotificationSlice";
-
+import { resetAllSteps } from "@/features/PrintingStep/printingStepSlice";
+import { reset } from "@/features/Printing/PrintForm";
 let tokenCheckInterval;
 
 const tokenValidationMiddleware = (store) => (next) => async (action) => {
@@ -54,6 +55,8 @@ const tokenValidationMiddleware = (store) => (next) => async (action) => {
     // Clear the interval when the user logs out
     clearInterval(tokenCheckInterval);
     tokenCheckInterval = null;
+    store.dispatch(resetAllSteps());
+    store.dispatch(reset())
   }
 
   return next(action); // Continue with the next middleware or reducer

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSelector,useDispatch } from "react-redux";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { addNotification } from "@/features/Notification/toastNotificationSlice";
-import {PrinterQuery} from "@/Components/PrintingPage/PrinterQuery";
+import { PrinterQuery } from "@/Components/PrintingPage/PrinterQuery";
 const printers = [
   { name: "Máy in 1", queue: 20 },
   { name: "Máy in 2", queue: 15 },
@@ -22,18 +22,17 @@ export const PrinterConfig = () => {
   const [usablePages, setUsablePages] = useState(0);
   const [remainingPages, setRemainingPages] = useState(0);
 
-
   const pageNumOfFile = useSelector((state) => state.PrintForm.PageNumber);
   const dispatch = useDispatch();
 
   const fetchUsablePages = async () => {
-    try {
-      const response = await fetch("/api/usable-pages");
-      const data = await response.json();
-      setUsablePages(data.usablePages);
-    } catch (error) {
-      console.error("Error fetching usable pages:", error);
-    }
+    // try {
+    //   const response = await fetch("/api/usable-pages");
+    //   const data = await response.json();
+    //   setUsablePages(data.usablePages);
+    // } catch (error) {
+    //   console.error("Error fetching usable pages:", error);
+    // }
   };
 
   // Fetch usable pages from the backend
@@ -55,8 +54,14 @@ export const PrinterConfig = () => {
     setRemainingPages(remaining);
 
     if (remaining < 0) {
-      dispatch(addNotification({id: Date.now(),message: "Số trang còn lại không đủ", type: "error"}));
-    } 
+      dispatch(
+        addNotification({
+          id: Date.now(),
+          message: "Số trang còn lại không đủ",
+          type: "error",
+        })
+      );
+    }
   }, [copies, printType, pageNumOfFile, usablePages]);
 
   return (
@@ -103,7 +108,9 @@ export const PrinterConfig = () => {
 
           {/* Usable Pages */}
           <div className="flex flex-col justify-center items-center">
-            <label className="label font-semibold">Số trang khả dụng  (A4)</label>
+            <label className="label font-semibold">
+              Số trang khả dụng (A4)
+            </label>
             <div className="flex flex-row justify-center items-center gap-2">
               <div className="badge badge-lg p-4 bg-blue-gray-200">
                 {usablePages}
@@ -112,14 +119,14 @@ export const PrinterConfig = () => {
                 className="btn btn-circle btn-xs "
                 onClick={fetchUsablePages} // Reload usable pages on button click
               >
-               <FontAwesomeIcon icon={faSync} />
+                <FontAwesomeIcon icon={faSync} />
               </button>
             </div>
           </div>
 
           {/* Remaining Pages */}
           <div className="flex flex-col justify-center items-center">
-            <label className="label font-semibold">Số trang còn lại  (A4)</label>
+            <label className="label font-semibold">Số trang còn lại (A4)</label>
             <div
               className={`badge badge-lg p-4 ${
                 remainingPages < 0 ? "badge-error" : "badge-success"
@@ -130,9 +137,12 @@ export const PrinterConfig = () => {
           </div>
         </div>
 
-        <PrinterQuery/>
+        <PrinterQuery />
+        <div className=" flex flex-row justify-center gap-4 p-2">
+          <button className="btn btn-sm btn-error">Reset </button>
+          <button className="btn btn-sm btn-success"> Tiến Hành In</button>
+        </div>
       </div>
-
-      </div>
+    </div>
   );
 };
