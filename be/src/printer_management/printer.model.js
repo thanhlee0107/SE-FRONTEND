@@ -205,3 +205,12 @@ exports.unsetPermittedFileTypes = async (value) => {
         throw new Error(err);
     }
 };
+
+exports.updateprintwaiting = async(id,value)=>{
+    try{
+        const result = await queryDatabase(`UPDATE Printer SET printWaiting = printWaiting + ? WHERE ID = ?`, [value,id]);
+        return result;
+    } catch(err){
+        throw new Error(err);
+    }
+}
