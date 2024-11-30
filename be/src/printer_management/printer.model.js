@@ -40,7 +40,7 @@ exports.createPrinter = async (newPrinter) => {
 // Get all printers
 exports.getAllPrinters = async () => {
     try {
-        const result = await queryDatabase(`SELECT * FROM Printer`);
+        const result = await queryDatabase(`SELECT * FROM Printer `);
         return result;
     } catch (err) {
         throw new Error(err);
@@ -205,3 +205,12 @@ exports.unsetPermittedFileTypes = async (value) => {
         throw new Error(err);
     }
 };
+
+exports.updateprintwaiting = async (IDFile, IDPrinter) => {
+    try {
+        const result = await queryDatabase(`UPDATE PrintStatus SET Status = 'Waiting' WHERE IDFile = ? AND IDPrinter = ?`, [IDFile, IDPrinter]);
+        return result;
+    } catch (err) {
+        throw new Error(err);
+    }
+}

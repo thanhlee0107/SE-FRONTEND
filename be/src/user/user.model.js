@@ -210,3 +210,13 @@ exports.updatePageBalanceByMSSV = async (mssv, pageBalance) => {
     throw new Error(err);
   }
 }
+
+exports.updatePageBalanceById = async (id, pageBalance) => {
+  try{
+    const result = await queryDatabase(`UPDATE user SET pageBalance = ? WHERE id = ?`, [pageBalance, mssv]);
+    
+    return result;
+  } catch(err){
+    throw new Error(err);
+  }
+}

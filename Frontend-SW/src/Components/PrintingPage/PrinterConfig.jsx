@@ -145,7 +145,7 @@ export const PrinterConfig = () => {
           </div>
 
           {/* Print Type */}
-          <div className="form-control">
+          <div className="form-control mr-2">
             <label className="label font-semibold">Kiểu In</label>
             <select
               value={printType}
