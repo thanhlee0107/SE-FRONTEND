@@ -23,14 +23,12 @@ const messageController = require("./message.controller");
  *           schema:
  *             type: object
  *             properties:
- *               receiverId:
- *                 type: string
- *                 description: ID of the receiver
+ *       
  *               message:
  *                 type: string
  *                 description: The content of the message
  *             example:
- *               receiverId: "12345"
+ *  
  *               message: "Hello, how are you?"
  *     responses:
  *       200:

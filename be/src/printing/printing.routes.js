@@ -11,7 +11,7 @@ const printingController = require("./printing.controller");
 
 /**
  * @swagger
- * /printing/printrequest/{id}:
+ * /printing/printrequest/:
  *   post:
  *     summary: Create a new print request
  *     description: API to create a print request based on user ID
@@ -27,9 +27,12 @@ const printingController = require("./printing.controller");
  *               IDPrinter:
  *                 type: string
  *                 description: ID of the printer
- *               IDFile:
+ *               Name:
  *                 type: string
- *                 description: ID of the file to be printed
+ *                 description: Name of the file
+ *               Type:
+ *                type: string
+ *                description: Type of the file (e.g., Word, Excel, PDF)
  *               Amount:
  *                 type: integer
  *                 description: Number of copies to print
@@ -41,7 +44,8 @@ const printingController = require("./printing.controller");
  *                 description: True for color printing, false for black and white
  *             example:
  *               IDPrinter: "1"
- *               IDFile: "3"
+ *               Name: "Word Document"
+ *               Type: "pdf"
  *               Amount: 10
  *               Size: "A3"
  *               Color: true
@@ -52,6 +56,6 @@ const printingController = require("./printing.controller");
  *         description: Invalid input
  */
 
-router.post("/printrequest/:id", printingController.printrequest);
+router.post("/printrequest/", printingController.printrequest);
 
 module.exports = router;

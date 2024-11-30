@@ -1,7 +1,7 @@
 const printinService = require("./printingService");
 
 exports.printrequest = async (req, res) => {
-  // const id = Number(req.params.id);
+  //const id = Number(req.params.id);
   const id = req.user.id;
   try {
     const result = await printinService.handlePrintingRequest(id, req.body);

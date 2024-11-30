@@ -279,4 +279,113 @@ router.get("/email/:email", userController.getUserByEmail);
  */
 router.delete("/:id", userController.deleteUser);
 
+/**
+ * @swagger
+ * /user/page-balance/{mssv}:
+ *   get:
+ *     summary: Get the page balance of a user by mssv
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: mssv
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The mssv of the user
+ *     responses:
+ *       200:
+ *         description: The page balance of the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pageBalance:
+ *                   type: integer
+ *                   description: The page balance of the user
+ *       404:
+ *         description: Page balance not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/page-balance/:mssv", userController.getPageBalance);
+
+
+/**
+ * @swagger
+ * /user/update-page-balance/{mssv}:
+ *   patch:
+ *     summary: Update page balance for a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: mssv
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The student ID (mssv) of the user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pageBalance:
+ *                 type: integer
+ *                 description: The new page balance value to update
+ *                 example: 100
+ *     responses:
+ *       200:
+ *         description: Page balance updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Update success"
+ *                 result:
+ *                   type: object
+ *                   properties:
+ *                     mssv:
+ *                       type: integer
+ *                       example: 12345
+ *                     pageBalance:
+ *                       type: integer
+ *                       example: 100
+ *       400:
+ *         description: Invalid mssv or pageBalance
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid mssv or pageBalance"
+ *       404:
+ *         description: Page balance not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Page balance not found"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
+router.patch("/update-page-balance/:mssv", userController.updatePageBalance);
+
 module.exports = router;
