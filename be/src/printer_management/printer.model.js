@@ -206,11 +206,11 @@ exports.unsetPermittedFileTypes = async (value) => {
     }
 };
 
-exports.updateprintwaiting = async (IDFile, IDPrinter) => {
-    try {
-        const result = await queryDatabase(`UPDATE PrintStatus SET Status = 'Waiting' WHERE IDFile = ? AND IDPrinter = ?`, [IDFile, IDPrinter]);
+exports.updateprintwaiting = async(id,value)=>{
+    try{
+        const result = await queryDatabase(`UPDATE Printer SET printWaiting = printWaiting + ? WHERE ID = ?`, [value,id]);
         return result;
-    } catch (err) {
+    } catch(err){
         throw new Error(err);
     }
 }
