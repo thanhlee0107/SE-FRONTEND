@@ -116,3 +116,35 @@ export const sendFileToPrint = async (printForm,token) => {
 
   
 }
+
+export const updatePrinter = async (printerId, updateData, token) => {
+  const response = await fetch(`http://localhost:3003/printers/update/${printerId}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updateData),
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text() || "Failed to update printer.");
+  }
+
+  return await response.json();
+};
+
+export const deletePrinter = async (printerId, token) => {
+  const response = await fetch(`http://localhost:3003/printers/delete/${printerId}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text() || "Failed to delete printer.");
+  }
+
+  return await response.json();
+};

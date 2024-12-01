@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faPrint, faFile } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { sendFileToPrint,fetchPrinters } from "@/API/usedAPI";
+import { sendFileToPrint, fetchPrinters } from "@/API/usedAPI";
 import {
   markCompleted,
   resetAllSteps,
 } from "@/features/PrintingStep/printingStepSlice";
-import {
-  reset
-} from "@/features/Printing/PrintForm";
-
+import { reset } from "@/features/Printing/PrintForm";
 
 export const SendFile = () => {
   const [modalResponse, setModalResponse] = useState(null);
@@ -65,52 +62,43 @@ export const SendFile = () => {
   }, [stages]);
 
   useEffect(() => {
-
-    if (response ==="Yêu cầu in thành công"){
+    if (response === "Yêu cầu in thành công") {
       setStages((prev) => [...prev, "printing"]);
     }
-
   }, [response]);
 
-  ;
   const [printer, setPrinter] = useState({});
   useEffect(() => {
-    
-
-    fetchPrinters(token).then((data) => {
-      
-      
-      setPrinter(data.filter((printer) => printer.ID===printForm.IDPrinter)[0]);
-     
-      
-    }).catch((err) => {
-      setModalResponse(err.message);
-    });
-    
+    fetchPrinters(token)
+      .then((data) => {
+        setPrinter(
+          data.filter((printer) => printer.ID === printForm.IDPrinter)[0]
+        );
+      })
+      .catch((err) => {
+        setModalResponse(err.message);
+      });
   }, []);
-
 
   useEffect(() => {
     if (progress.printing === 100) {
       dispatch(markCompleted(4));
-      
-      if (printer){
-        setModalResponse(`Vui lòng đến cơ sở ${printer.Campus[2]} tòa ${printer.Building} nhận file in bạn nhé !`);
-      }
-      
-     
-      dispatch(reset());
 
+      if (printer) {
+        setModalResponse(
+          `Vui lòng đến cơ sở ${printer.Campus[2]} tòa ${printer.Building} nhận file in bạn nhé !`
+        );
+      }
+
+      dispatch(reset());
     }
   }, [progress.printing]);
 
   const handleReset = () => {
-    
     dispatch(resetAllSteps());
-  
-  setModalResponse(null);
-}
 
+    setModalResponse(null);
+  };
 
   return (
     <div className="flex flex-col gap-2 p-4">
@@ -161,18 +149,18 @@ export const SendFile = () => {
             <FontAwesomeIcon className="w-6 h-6 text-white" icon={faPrint} />
           </div>
           <div className="flex-grow flex flex-col gap-1 mx-4">
-            <span className="text-sm text-gray-200">{Math.round(progress.printing)!==100?"File đang in":" Đã in xong"}</span>
-            {
-              (Math.round(progress.printing)!==100) ? (
-                <progress
-              className="progress progress-success w-full"
-             
-              max="100"
-            ></progress>)
-            : null
-            }
+            <span className="text-sm text-gray-200">
+              {Math.round(progress.printing) !== 100
+                ? "File đang in"
+                : " Đã in xong"}
+            </span>
+            {Math.round(progress.printing) !== 100 ? (
+              <progress
+                className="progress progress-success w-full"
+                max="100"
+              ></progress>
+            ) : null}
           </div>
-          
         </div>
       )}
 
@@ -182,10 +170,7 @@ export const SendFile = () => {
             <h3 className="text-lg font-bold">Thông báo</h3>
             <p className="py-4">{modalResponse}</p>
             <div className="modal-action">
-              <button
-                onClick={() => handleReset()}
-                className="btn btn-neutral"
-              >
+              <button onClick={() => handleReset()} className="btn btn-neutral">
                 {progress.printing === 100 ? "OK" : "Đóng"}
               </button>
             </div>

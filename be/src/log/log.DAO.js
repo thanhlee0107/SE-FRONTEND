@@ -226,6 +226,7 @@ exports.getPrinterHistoryByDateDAO = async (printerID, startDate, endDate, offse
       `
       SELECT 
         p.StudentID,
+        u.MSSV,
         p.IDPrinter AS PrinterID,
         pr.Campus,
         pr.Building,
@@ -243,6 +244,7 @@ exports.getPrinterHistoryByDateDAO = async (printerID, startDate, endDate, offse
           ELSE 0
         END AS report
       FROM Printing p
+      JOIN user u ON p.StudentID = u.ID
       JOIN File f ON p.IDFile = f.ID
       JOIN Printer pr ON p.IDPrinter = pr.ID
       JOIN PrintStatus ps ON p.IDPrinter = ps.IDPrinter AND p.IDFile = ps.IDFile

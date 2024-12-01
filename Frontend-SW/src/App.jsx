@@ -6,10 +6,11 @@ import { HomePage } from "./Page/HomePage";
 import { ProtectedRoute } from "./protectedRoute";
 import { PrintingPage } from "./Page/PrintingPage";
 import { AdminHomePage } from "./Page/AdminHomePage";
-import { PrinterMangement } from "./Page/PrinterMange";
+import { PrinterMangement } from "./Page/PrinterMangement";
 import { useSelector,useDispatch } from "react-redux";
 import { logout } from "@/features/auth/authSlice";
 import { addNotificationWithTimeout } from "@/features/Notification/toastNotificationSlice";
+
 function App() {
   const role = useSelector((state) => state.auth.role);
   const token = useSelector((state) => state.auth.token);
@@ -72,7 +73,15 @@ function App() {
           path="/admin-home"
           element={
             <ProtectedRoute>
-              <AdminHomePage />
+              {role === "user" ?null:<AdminHomePage />}
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/printer-manage"
+          element={
+            <ProtectedRoute>
+              {role === "user" ?null:<PrinterMangement />}
             </ProtectedRoute>
           }
         />

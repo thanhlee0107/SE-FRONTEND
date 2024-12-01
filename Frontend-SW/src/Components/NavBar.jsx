@@ -7,6 +7,8 @@ import { LogOut } from "./logOut";
 import MessageIcon from "/src/assets/message-svgrepo-com.svg?react";
 import NotificationIcon from "/src/assets/Notification.svg?react";
 import PagePurchase from "./PagePurchase";
+import { UserLog } from "./UserLog/UserLog";
+
 export const NavBar = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("jwt");
@@ -23,13 +25,13 @@ export const NavBar = () => {
   const decodedToken = token ? jwtDecode(token) : null;
 
   const name = decodedToken?.payload.name || "Unknown User";
+  const role = decodedToken?.payload.role || "Unknown Role";
+  const id = decodedToken?.payload.id || "Unknown ID";
+  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
- 
 
- 
-
- 
+  const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
   return (
     <nav className="bg-[#3c8dbc] text-white flex items-center  flex-grow">
@@ -122,20 +124,33 @@ export const NavBar = () => {
               Hello, {name}
             </div>
             <div className="flex flex-col gap-2">
-            <button
-        className="btn btn-success btn-xs rounded text-white"
-        onClick={() => setIsModalOpen(true)}
-      >
-        Mua Trang
-      </button>
+              {role === "user" && (
+                <button
+                  className="btn btn-success btn-xs rounded text-white"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Mua Trang
+                </button>
+                
+                
+              )}
+              {role === "user" && (
+                <button
+                  className="btn btn-success btn-xs rounded text-white"
+                  onClick={() => setIsLogModalOpen(true)}
+                >
+                  Xem Lịch Sử In Ấn
+                </button>
+                
+                
+              )}
               <LogOut />
             </div>
           </div>
         )}
       </div>
-      {isModalOpen && (
-        <PagePurchase setmodal={setIsModalOpen}/>
-      )}
+      {isModalOpen && <PagePurchase setmodal={setIsModalOpen} />}
+      {isLogModalOpen && <UserLog studentID={id} setmodal={setIsLogModalOpen} />}
       {/* Language Selector */}
       <div className="flex items-center gap-2 mr-2">
         {/* Vietnamese Flag */}
