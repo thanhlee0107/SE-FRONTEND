@@ -5,6 +5,7 @@ import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { addNotification } from "@/features/Notification/toastNotificationSlice";
 import { PrinterQuery } from "@/Components/PrintingPage/PrinterQuery";
 import { modify } from "@/features/Printing/PrintForm";
+import { truncateFileName } from "@/utils/helpers";
 import {
   goToStep,
   markCompleted,
@@ -21,6 +22,8 @@ export const PrinterConfig = () => {
   const [isReadytoPrint, setIsReadytoPrint] = useState(false);
   const [modalConfirmed, setModalConfirmed] = useState(false);
 
+
+  
   const pageNumOfFile = useSelector((state) => state.PrintForm.PageNumber);
   const size = useSelector((state) => state.PrintForm.Size);
   const token = useSelector((state) => state.auth.token);
@@ -121,7 +124,7 @@ export const PrinterConfig = () => {
     //Update the PrintForm state
     dispatch(
       modify({
-        Amount: Number(copies),
+        Amount: Number(pageNum),
         Side: printType === "Single" ? "Single" : "Double",
       })
     );
@@ -232,7 +235,7 @@ export const PrinterConfig = () => {
       </div>
       {modalConfirmed && (
   <div className="modal modal-open">
-    <div className="modal-box w-80">
+    <div className="modal-box w-120">
       {/* Modal Header */}
       <div className="flex justify-between items-center mb-4">
         <p className="text-lg font-bold">Xác nhận IN</p>
@@ -257,6 +260,19 @@ export const PrinterConfig = () => {
         <div className="flex justify-between">
           <span className="font-semibold">Kiểu in:</span>
           <span>{printForm.Side==="Single"?"Một Mặt":"Hai Mặt"}</span>
+        </div>
+        
+        <div className="flex justify-between">
+          <span className="font-semibold">Kiểu Giấy:</span>
+          <span>{printForm.Size}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">Màu:</span>
+          <span>{printForm.Color ? "Màu" :"Đen Trắng"}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">File:</span>
+          <span>{truncateFileName(printForm.Name)}</span>
         </div>
         <div className="flex justify-between">
           <span className="font-semibold">Tổng số trang:</span>

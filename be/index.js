@@ -14,9 +14,9 @@ const printingService = require("./src/printing/printingService");
 
 // Middleware
 // app.use(express.json());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "150mb" })); 
+app.use(bodyParser.urlencoded({ limit: "150mb", extended: true })); 
 app.use(cors());
-
 //Swagger
 const swaggerOptions = {
   definition: {

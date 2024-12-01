@@ -3,6 +3,9 @@ const modulePrinter = require("../printer_management/printer.model");
 const dbFile = require("../file/dbFile");
 const userService = require("../user/user.model");
 const printerService = require("../printer_management/printer.model");
+
+const fs = require("fs");
+const path = require("path");
 // Lưu trữ hàng đợi công việc cho từng máy in
 const printerQueues = {};
 
@@ -122,24 +125,61 @@ const addPrinterJob = async (IDUser, IDFile, req) => {
   }
 };
 
+async function storeBase64ToDisk(req) {
+  const { Name, File } = req; 
+  const filePath = path.join(__dirname,"..", "FileStorage", `${Name || "output.pdf"}`);
+
+  try {
+    
+    const uploadDir = path.dirname(filePath);
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    
+    const buffer = Buffer.from(File, "base64");
+
+    
+    fs.writeFileSync(filePath, buffer);
+
+    console.log(`File saved to ${filePath}`);
+    return { success: true, filePath };
+  } catch (error) {
+    console.error("Error saving file:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+
 exports.handlePrintingRequest = async (MSSV,IDUser, req) => {
   try {
-    const { IDPrinter, Name, Type, Amount, Size, Color } = req;
+    const { IDPrinter, Name, Type, Amount, Size, Color,File } = req;
 
+   if(Name&&File){
+    const fileSucess=await storeBase64ToDisk({Name,File}); 
+    if(!fileSucess.success){
+      throw new Error("Lỗi khi xử lý file");
+    }
+   }
+
+
+    
     // Kiểm tra thông tin đầu vào
-    if (!IDPrinter || !Name || !Type || !Amount || !Size || !Color) {
+    if (!IDPrinter || !Name || !Type || !Amount || !Size ||!File) {
       console.error("Thiếu thông tin, không thể thêm công việc vào hàng đợi.");
       throw new Error(
         "Thiếu thông tin, không thể thêm công việc vào hàng đợi."
       );
     }
+
+
     //Chỗ này sẽ bổ sung sau các hàm check điều kiện xem coi tài khoản của người dùng có đủ giấy có size và số lượng theo yêu cầu hay không;
     let isValid = true;
     const result = await userService.getPageBalanceByMSSV(MSSV);
     const pageBalance = result.pageBalance;
-    if (pageBalance < Amount) {
+    const UpdatedNumber = pageBalance - Amount;
+    if (UpdatedNumber < 0) {
       isValid = false;
-      throw new Error("Tài khoản này Không đủ giấy để thực hiện yêu cầu in");
     }
     //---------------------------------------------------------------------------------------------
     if (isValid) {
@@ -147,7 +187,7 @@ exports.handlePrintingRequest = async (MSSV,IDUser, req) => {
       //update thông tin vào database
       await dbPrinting.checkAndInsertPrinting(IDFile, IDPrinter, IDUser);
       await addPrinterJob(IDUser, IDFile, req);
-      await userService.updatePageBalanceById(task.IDUser, -task.Amount); //tiến hành trừ vào pageBalance của students
+      await userService.updatePageBalanceById(IDUser, UpdatedNumber); //tiến hành trừ vào pageBalance của students
       await printerService.updateprintwaiting(IDPrinter, 1); // cập nhật lại hàng đợi của máy in
     } else {
       throw new Error("Tài khoản này Không đủ giấy để thực hiện yêu cầu in");

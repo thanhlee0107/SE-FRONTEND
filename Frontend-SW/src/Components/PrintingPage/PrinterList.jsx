@@ -43,7 +43,7 @@ export const PrinterList = ({ campus, block, selectedPrinter, onSelectPrinter })
         }
         setError("Failed to fetch printers. Please try again later.");
       } finally {
-        isFetching.current = false; // Reset fetching state
+        isFetching.current = false; 
       }
     };
 

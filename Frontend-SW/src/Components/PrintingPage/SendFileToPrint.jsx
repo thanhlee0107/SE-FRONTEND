@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faPrint, faFile } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { sendFileToPrint,fetchPrinters } from "@/API/usedAPI";
+import {
+  markCompleted,
+  resetAllSteps,
+} from "@/features/PrintingStep/printingStepSlice";
+import {
+  reset
+} from "@/features/Printing/PrintForm";
+
 
 export const SendFile = () => {
   const [modalResponse, setModalResponse] = useState(null);
@@ -11,12 +21,17 @@ export const SendFile = () => {
     printing: 0,
   });
 
+  const [response, setResponse] = useState("");
+
+  const dispatch = useDispatch();
+  const printForm = useSelector((state) => state.PrintForm);
+  const token = useSelector((state) => state.auth.token);
+
   useEffect(() => {
     // Simulate stages of sending a file to print
     const timers = [
       setTimeout(() => setStages((prev) => [...prev, "queue"]), 0),
       setTimeout(() => setStages((prev) => [...prev, "sending"]), 5000),
-      setTimeout(() => setStages((prev) => [...prev, "printing"]), 10000),
     ];
 
     return () => timers.forEach((timer) => clearTimeout(timer));
@@ -35,13 +50,67 @@ export const SendFile = () => {
         }, 5);
         intervalIds.push(intervalId);
         if (stage === "sending" && progress[stage] === 0) {
-          console.log("Send API request to server to send file to printer");
+          sendFileToPrint(printForm, token)
+            .then((res) => {
+              setResponse(res.message);
+            })
+            .catch((err) => {
+              setModalResponse(err.message);
+            });
         }
       }
     });
 
     return () => intervalIds.forEach((id) => clearInterval(id));
   }, [stages]);
+
+  useEffect(() => {
+
+    if (response ==="Yêu cầu in thành công"){
+      setStages((prev) => [...prev, "printing"]);
+    }
+
+  }, [response]);
+
+  ;
+  const [printer, setPrinter] = useState({});
+  useEffect(() => {
+    
+
+    fetchPrinters(token).then((data) => {
+      
+      
+      setPrinter(data.filter((printer) => printer.ID===printForm.IDPrinter)[0]);
+     
+      
+    }).catch((err) => {
+      setModalResponse(err.message);
+    });
+    
+  }, []);
+
+
+  useEffect(() => {
+    if (progress.printing === 100) {
+      dispatch(markCompleted(4));
+      
+      if (printer){
+        setModalResponse(`Vui lòng đến cơ sở ${printer.Campus[2]} tòa ${printer.Building} nhận file in bạn nhé !`);
+      }
+      
+     
+      dispatch(reset());
+
+    }
+  }, [progress.printing]);
+
+  const handleReset = () => {
+    
+    dispatch(resetAllSteps());
+  
+  setModalResponse(null);
+}
+
 
   return (
     <div className="flex flex-col gap-2 p-4">
@@ -72,16 +141,16 @@ export const SendFile = () => {
             <FontAwesomeIcon className="w-6 h-6 text-white" icon={faFile} />
           </div>
           <div className="flex-grow flex flex-col gap-1 mx-4">
-            <span className="text-sm text-gray-200">Tiến hành gửi file</span>
-            <progress
-              className="progress progress-success w-full"
-              value={progress.sending}
-              max="100"
-            ></progress>
+            <span className="text-sm text-gray-200">
+              {response === "" ? "Tiến hành gửi file" : response}
+            </span>
+            {response === "" ? (
+              <progress
+                className="progress progress-success w-full"
+                max="100"
+              ></progress>
+            ) : null}
           </div>
-          <span className="text-sm text-gray-400 ml-2 mr-2">
-            {Math.round(progress.sending)}%
-          </span>
         </div>
       )}
 
@@ -92,30 +161,32 @@ export const SendFile = () => {
             <FontAwesomeIcon className="w-6 h-6 text-white" icon={faPrint} />
           </div>
           <div className="flex-grow flex flex-col gap-1 mx-4">
-            <span className="text-sm text-gray-200">File đang in</span>
-            <progress
+            <span className="text-sm text-gray-200">{Math.round(progress.printing)!==100?"File đang in":" Đã in xong"}</span>
+            {
+              (Math.round(progress.printing)!==100) ? (
+                <progress
               className="progress progress-success w-full"
-              value={progress.printing}
+             
               max="100"
-            ></progress>
+            ></progress>)
+            : null
+            }
           </div>
-          <span className="text-sm text-gray-400 ml-2 mr-2">
-            {Math.round(progress.printing)}%
-          </span>
+          
         </div>
       )}
 
       {modalResponse && (
         <div className="modal modal-open">
           <div className="modal-box">
-            <h3 className="text-lg font-bold">Response</h3>
+            <h3 className="text-lg font-bold">Thông báo</h3>
             <p className="py-4">{modalResponse}</p>
             <div className="modal-action">
               <button
-                onClick={() => setModalResponse(null)}
-                className="btn btn-primary"
+                onClick={() => handleReset()}
+                className="btn btn-neutral"
               >
-                Close
+                {progress.printing === 100 ? "OK" : "Đóng"}
               </button>
             </div>
           </div>
