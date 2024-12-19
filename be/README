@@ -1,64 +1,60 @@
 SE-FRONTEND Backend
-This repository contains the backend code for the SE-FRONTEND project, providing APIs and database management functionalities.
+# Node.js Express Application
 
-Table of Contents
-Introduction
-Features
-Installation
-Usage
-Contributing
-License
-Introduction
-The SE-FRONTEND Backend is a RESTful API designed to support the SE-FRONTEND project. It includes functionality for database initialization, API documentation through Swagger, and a testing environment for development.
+This is a Node.js application using the Express framework. It provides a basic API and serves as a template for building RESTful web services.
 
-Features
-RESTful API for seamless integration.
-Swagger documentation available at /api-docs.
-Easy setup for database initialization.
-Support for running unit and integration tests.
-Installation
-Follow the steps below to set up the backend:
+## Prerequisites
 
-bash
-Copy code
-# Navigate to the backend directory
-cd be
+Before you begin, ensure you have met the following requirements:
 
-# Configure environment variables for MySQL connection in the .env file
-# Example:
-# DB_HOST=localhost
-# DB_PORT=3306
-# DB_USER=root
-# DB_PASSWORD=yourpassword
-# DB_NAME=yourdatabase
+- [Node.js](https://nodejs.org/en/) (version 14.x or later)
+- [npm](https://www.npmjs.com/) (Node Package Manager)
 
-# Install dependencies
+## Getting Started
+
+Follow the steps below to set up and run the application locally.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/chiencse/geek.git
+```
+2. Install dependencies
+Run the following command to install all the dependencies required for the app
+```bash
 npm install
 
+```
+3. Configure environment variables
+Ensure that you configure any required environment variables for the app, such as database credentials or API keys. You can create a .env file in the root directory with variables like:
+```bash
+PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=yourpassword
+DB_NAME=yourdbname
+```
+
+4. Run the application
+Start the application by running the following command:
+```bash
+npm start
+```
+This will start the Express app, which should now be running on http://localhost:3000.
+
+Alternatively, if you are in a development environment, you can use nodemon to automatically restart the server on file changes:
+```bash
+npm run dev
+```
+6. Swagger Documentation
+This app includes Swagger for API documentation. Once the app is running, you can access the documentation at:
+http://localhost:3000/api-docs
+
+
 # Initialize the database
-node initDatabase.js
 Usage
 Start the development server and access project features:
+```bash
+node initDatabase.js
+```
 
-bash
-Copy code
-# Start the development server
-nodemon index.js
-
-# API Documentation
-# Swagger UI is available at:
-http://localhost:3003/api-docs
-
-# Run tests
-npm test
-Contributing
-We welcome contributions to the SE-FRONTEND Backend. To contribute:
-
-Fork the repository.
-Create a new branch for your feature or bug fix.
-Commit your changes with clear and descriptive messages.
-Submit a pull request for review.
-License
-This project is licensed under the MIT License.
-
-Feel free to replace placeholder text (e.g., license details or example .env variables) with the specific details for your project.
