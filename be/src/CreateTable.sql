@@ -11,7 +11,15 @@ CREATE TABLE user(
     role ENUM('user', 'admin') DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE Paper(
+CREATE TABLE IF NOT EXISTS message (
+    id AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES user(id),
+    FOREIGN KEY (receiver_id) REFERENCES user(id)
+) CREATE TABLE Paper(
     Size CHAR(2) NOT NULL DEFAULT 'A4',
     Price INT,
     PRIMARY KEY (Size)
@@ -73,14 +81,14 @@ CREATE TABLE Printing(
     CONSTRAINT fk_printing_studentid FOREIGN KEY (StudentID) REFERENCES user(mssv)
 );
 CREATE TABLE PrintStatus(
-    Status VARCHAR(10),
-    Date DATE,
-    Amount INT,
     IDFile INT NOT NULL,
     IDPrinter INT NOT NULL,
-    PRIMARY KEY (Status, Date, Amount, IDFile, IDPrinter),
-    CONSTRAINT fk_printstatus_idfile FOREIGN KEY (IDFile) REFERENCES Printing(IDPrinter),
-    CONSTRAINT fk_printstatus_idprinter FOREIGN KEY (IDPrinter) REFERENCES Printing(IDPrinter)
+    Amount INT NOT NULL,
+    Date DATETIME NOT NULL,
+    Status VARCHAR(255) NOT NULL,
+    EndDate DATETIME,
+    PRIMARY KEY (IDFile, IDPrinter, Amount, Date, Status),
+    FOREIGN KEY (IDFile, IDPrinter) REFERENCES Printing(IDFile, IDPrinter)
 );
 CREATE TABLE PermittedFile(
     IDPrinter INT NOT NULL,

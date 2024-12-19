@@ -1,4 +1,5 @@
 class CreateUserDto {
+
   constructor({ name, mssv, password, email, sex, pageBalance, role }) {
     this.name = name;
     this.mssv = mssv;

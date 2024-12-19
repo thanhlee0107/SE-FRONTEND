@@ -12,8 +12,8 @@ const createUserTable = `CREATE TABLE IF NOT EXISTS user (
 );`;
 
 const insertData = [
-  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '1234567', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
-  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '1234567', '1234567', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
+  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
+  `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Admin', '2234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'admin@hcmut.edu.vn', 'female', '100', 'admin') `,
 ];
 
 const restartUserDatabase = async () => {
@@ -31,7 +31,7 @@ const restartUserDatabase = async () => {
 };
 
 // Call the function
-// restartUserDatabase();
+restartUserDatabase();
 
 db.query(createUserTable, (err) => {
   if (err) {

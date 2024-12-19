@@ -9,11 +9,21 @@ const queryDatabase = (query, params = []) => {
         console.log(err);
         reject(err);
       } else {
-        resolve(result[0]);
+        console.log(result);
+        if (result.affectedRows !== undefined) {
+          resolve({
+            affectedRows: result.affectedRows,
+            changedRows: result.changedRows,
+            
+          });
+        } else {
+          resolve(result[0]); // For other queries, return the first row
+        }
       }
     });
   });
 };
+
 
 const insertData = [
   `INSERT INTO user (name, mssv, password, email, sex, pageBalance, role) VALUES ('Hoang Van A', '1234567', '$2b$10$mEeCfXeGDZoac8lQY7DhBucVdK.nQtm5L/TLROOlzOkApgt9bYNg.', 'user@hcmut.edu.vn', 'male', '100', 'user') `,
@@ -179,3 +189,34 @@ exports.deleteUserById = async (id) => {
     throw new Error(err);
   }
 };
+
+//Get Page balance by ID
+exports.getPageBalanceByMSSV = async (mssv) => {
+  try{
+    const result = await queryDatabase(`SELECT pageBalance FROM user WHERE mssv = ?`, [mssv]);
+    
+    return result;
+  } catch(err){
+    throw new Error(err);
+  }
+}
+
+exports.updatePageBalanceByMSSV = async (mssv, pageBalance) => {
+  try{
+    const result = await queryDatabase(`UPDATE user SET pageBalance = ? WHERE mssv = ?`, [pageBalance, mssv]);
+    
+    return result;
+  } catch(err){
+    throw new Error(err);
+  }
+}
+
+exports.updatePageBalanceById = async (id, pageBalance) => {
+  try{
+    const result = await queryDatabase(`UPDATE user SET pageBalance = ? WHERE id = ?`, [pageBalance, id]);
+    
+    return result;
+  } catch(err){
+    throw new Error(err);
+  }
+}

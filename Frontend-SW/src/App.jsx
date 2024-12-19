@@ -1,118 +1,93 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-  Navigate,
-} from "react-router-dom";
-//fetch api
-import axios from "./api/axiosConfig";
-//
-import React, { useState, useEffect } from "react";
-// pages
-import Home from "./Components/HomePage/Home";
-import Print from "./Components/PrintPage/Print";
-import History from "./Components/HistoryPage/History";
-import LoginForm from "./Components/LoginForm/LoginForm";
-import Payment from "./Components/Payment/Payment";
-import Printers from "./Components/Admin/Printers/Printers"
-import CreateReport from "./Components/ReportPage/CreateReport/CreateReport";
-import OldReport from "./Components/ReportPage/OldReport/OldReport";
-import AdHome from "./Components/Admin/AdHome/AdHome"
-import Configuration from "./Components/Admin/Configuration/Configuration"
-//authenticate
-// layouts
-import RootLayout from "./Layouts/RootLayout";
-import RegisterPage from "./Components/RegisterForm/Register";
-// import UserInfo from "./Layouts/UserInfo";
+import { useEffect, useState } from "react";
+import { LandingPage } from "./Page/landingPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LoginPage } from "./Page/login";
+import { HomePage } from "./Page/HomePage";
+import { ProtectedRoute } from "./protectedRoute";
+import { PrintingPage } from "./Page/PrintingPage";
+import { AdminHomePage } from "./Page/AdminHomePage";
+import { PrinterMangement } from "./Page/PrinterMangement";
+import { useSelector,useDispatch } from "react-redux";
+import { logout } from "@/features/auth/authSlice";
+import { addNotificationWithTimeout } from "@/features/Notification/toastNotificationSlice";
 
-function PrivateRoute({ children, isAuthenticated }) {
-  return isAuthenticated ? children : <Navigate to="/login" />;
-}
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userData, setUserData] = useState(null); // State to store user data
+  const role = useSelector((state) => state.auth.role);
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const validateToken = async () => {
+      try {
+        console.log("Validating token with server...");
+        const response = await fetch("http://localhost:3003/auth/verify", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
+        if (!response.ok) {
+          
+          dispatch(logout());
+
+          
+          dispatch(
+            addNotificationWithTimeout({
+              id: Date.now(),
+              message: "Session expired. Please log in again.",
+              type: "error",
+            })
+          );
+        }
+      } catch (error) {
+        console.error("Error validating token with server:", error);
+      }
+    };
+
+    validateToken(); // Call the async function
+  }, [token, dispatch]); // Dependencies for the useEffect
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route
-          path="/login"
+          path="/home"
           element={
-            <LoginForm
-              setIsAuthenticated={setIsAuthenticated}
-              setUserData={setUserData}
-            />
+            <ProtectedRoute>
+              {role === "user" ? <HomePage /> : <AdminHomePage />}
+            </ProtectedRoute>
           }
         />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<RootLayout userData={userData} />}>
-          <Route
-            index
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                {userData?.admin ? <AdHome /> : <Home />}
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="print"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <Print />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="history"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <History />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="payment"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <Payment />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="printers"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <Printers />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="createReport"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <CreateReport/>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="oldReport"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <OldReport/>
-              </PrivateRoute>
-            }
-          />
-
-        </Route>
-
-      </>
-    )
+        <Route
+          path="/printing-service"
+          element={
+            <ProtectedRoute>
+              <PrintingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-home"
+          element={
+            <ProtectedRoute>
+              {role === "user" ?null:<AdminHomePage />}
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/printer-manage"
+          element={
+            <ProtectedRoute>
+              {role === "user" ?null:<PrinterMangement />}
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
-
-  return <RouterProvider router={router} />;
 }
 
 export default App;

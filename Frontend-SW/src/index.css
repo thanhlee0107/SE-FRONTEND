@@ -1,35 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;
-  border: 0;
-  outline: none;
-  list-style: none;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden; /* Ngăn cuộn ngang */
-}
-
-.container {
-   /* Hoặc bất kỳ giá trị tối đa nào bạn muốn */
-  width: 100%;
-  margin: 0 auto; /* Căn giữa */
-}
-
-
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
- 
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-    
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
